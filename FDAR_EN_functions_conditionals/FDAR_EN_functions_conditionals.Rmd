@@ -5,7 +5,7 @@ output:
     number_sections: true
     toc: true
     toc_float: true
-    css: !expr here::here("global/style/style.css")
+    css: !expr here::here("global/style/si-analytics.css")
     highlight: kate
   word_document:
     toc: true
@@ -872,11 +872,6 @@ calculate_isoniazid_dosage2(c(30, 40, 50, 100))
 ```
 
 
-## Contributors {.unlisted .unnumbered}
-
-The following team members contributed to this lesson:
-
-`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
 
 ## References {.unlisted .unnumbered}
 
@@ -889,3 +884,7 @@ Some material in this lesson was adapted from the following sources:
 <!-- (Chicago format. You can use https://www.citationmachine.net) -->
 
 `r tgc_license()`
+
+# Well done {.unlisted .unnumbered}
+
+You can now submit your code along

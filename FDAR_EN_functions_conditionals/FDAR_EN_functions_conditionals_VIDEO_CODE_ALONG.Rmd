@@ -4,7 +4,7 @@ output:
   html_document:
     number_sections: true
     toc: true
-    css: !expr here::here("global/style/style.css")
+    css: !expr here::here("global/style/si-analytics.css")
     highlight: kate
   word_document:
     toc: true
@@ -704,3 +704,7 @@ calculate_isoniazid_dosage2 <- function(weight) {
 
 calculate_isoniazid_dosage2(c(30, 40, 50, 100))
 ```
+
+# Well done {.unlisted .unnumbered}
+
+You can now submit your code along

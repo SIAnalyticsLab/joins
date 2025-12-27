@@ -5,7 +5,7 @@ output:
     number_sections: true
     toc: true
     toc_float: true
-    css: !expr here::here("global/style/style.css")
+    css: !expr here::here("global/style/si-analytics.css")
     highlight: kate
 editor_options: 
   chunk_output_type: console
@@ -721,8 +721,6 @@ The variables in the dataset are:
 
 -   `quaternary_cause_death_code`: code of the quaternary cause of death [chr]
 
-# Contributors {.unlisted .unnumbered}
+# Well done {.unlisted .unnumbered}
 
-The following team members contributed to this lesson:
-
-`r tgc_contributors_list(ids = c("camille", "kendavidn"))`
+You can now submit your code along 

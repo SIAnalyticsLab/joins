@@ -5,7 +5,7 @@ output:
     number_sections: true
     toc: true
     toc_float: true
-    css: !expr here::here("global/style/style.css")
+    css: !expr here::here("global/style/si-analytics.css")
     highlight: kate
 editor_options: 
   chunk_output_type: inline
@@ -922,8 +922,6 @@ hiv_dat_messy_1 %>%
   mutate(numeric_part = str_sub(patient_id, 4))
 ```
 
-# Contributors {.unlisted .unnumbered}
+# Well done {.unlisted .unnumbered}
 
-The following team members contributed to this lesson:
-
-`r tgc_contributors_list(ids = c("camille", "kendavidn"))`
+You can now submit your code along 
