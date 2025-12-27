@@ -1,0 +1,741 @@
+---
+title: 'Boucles, Across, et Conditionnels'
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+editor_options: 
+  chunk_output_type: inline
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo = F, message = F, warning = F}
+# Charger les packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable, gt, flextable, inspectdf)
+
+## fonctions
+source(here::here("global/functions/misc_functions.R"))
+
+## rendu par défaut
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+knitr::opts_chunk$set(class.source = "tgc-code-block", error = T)
+
+```
+
+# Introduction
+
+Au cœur de nombreuses tâches de programmation se trouve le concept de répétition d'une tâche plusieurs fois. Une boucle `for` en R nous permet de faire exactement cela. Les boucles permettent une répétition efficace, ce qui fait gagner du temps et des efforts.
+
+Que vous soyez un débutant ou un codeur expérimenté, maîtriser ces concepts est essentiel pour écrire un code R intelligent.
+
+Plongeons-nous et améliorons vos compétences en codage !
+
+
+
+# Objectifs d'apprentissage
+
+À la fin de cette leçon, vous serez capable de :
+
+-   Expliquer la syntaxe et la structure d'une boucle `for` de base en R
+-   Utiliser des variables d'index pour itérer à travers plusieurs vecteurs simultanément dans une boucle
+-   Intégrer des instructions conditionnelles `if/else` dans une boucle
+-   Stocker les résultats des boucles dans des vecteurs et des listes
+-   Appliquer des boucles à des tâches telles que l'analyse de plusieurs jeux de données et la génération de plusieurs graphiques
+
+## Packages
+
+‣ Nous utiliserons plusieurs packages dans cette leçon
+
+‣ **Assurez-vous que les packages suivants sont installés et chargés :**
+
+```{r}
+# Charger les packages nécessaires
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, here, openxlsx, tools, outbreaks, medicaldata)
+```
+
+## Intro aux boucles `for`
+
+‣ Commençons par un exemple simple d'utilisation des boucles `for` en R
+
+‣ Supposons que nous ayons un **vecteur d'âges d'enfants** et que nous voulions **convertir ceux-ci en mois**
+
+‣ Tout d'abord, créez un vecteur d'âges en années
+
+```{r}
+ages <-                         # âges 7 8 et 9
+```
+
+‣ Nous pourrions facilement convertir les âges en mois en utilisant l'opération `*` en R
+
+```{r}
+______________
+```
+
+‣ Ce que R fait (conceptuellement) cependant, c'est exécuter une boucle for. Écrivons-la explicitement
+
+```{r}
+________________________________
+```
+
+‣ `age` est une variable temporaire qui prend chaque élément dans `ages`
+
+‣ Vous pouvez choisir **n'importe quel nom** pour cette variable
+
+```{r}
+for (______________ in ages) print(______________)  # nom_aleatoire
+```
+
+‣ Si le contenu de la boucle est **plus d'une ligne**, utilisez des **accolades** `{}`
+
+```{r}
+for (age in ages)   # boucle multi-lignes 
+  ______________
+  ______________
+  
+```
+
+‣ La structure générale de toute boucle for :
+
+![](images/for_loop_syntax.png){width="420"}
+
+::: practice
+### Boucle Basique pour convertir des Heures en Minutes {.unlisted .unnumbered}
+
+Essayez de convertir des heures en minutes en utilisant une boucle `for`. Commencez avec ce vecteur d'heures :
+
+```{r eval = F}
+heures <- c(3, 4, 5) # Vecteur d'heures
+# Votre code ici
+
+for ___
+  ___ # convertir les heures en minutes et afficher
+```
+:::
+
+‣ Remarque : Les boucles peuvent être imbriquées les unes dans les autres. Par exemple :
+
+```{r}
+# for i in 1:2, for j in 1:2, imprimer i * j
+______________
+```
+
+‣ Cela crée une combinaison de valeurs `i` et `j` comme le montre ce tableau :
+
+| i   | j   | i \* j |
+|-----|-----|--------|
+| 1   | 1   | 1      |
+| 1   | 2   | 2      |
+| 2   | 1   | 2      |
+| 2   | 2   | 4      |
+
+‣ Les boucles imbriquées sont cependant moins courantes et ont souvent des alternatives plus efficaces.
+
+:::
+
+# Les boucles `for` sont-elles utiles en R?
+
+‣ R dispose déjà d'opérations *vectorisées* !
+
+‣ Exemple : Conversion d'âge sans boucle. (Ne fonctionne pas par défaut dans la plupart des langages de programmation)
+
+```{r}
+# ages * 12
+
+```
+
+‣ De plus, on travaille généralement avec des dataframes et des opérations `tidyverse` :
+
+```{r}
+df_ages <- tibble(age = ages)
+# muter df_ages pour ajouter la colonne age_mois
+
+```
+
+‣ Les boucles seront très utiles dans des scénarios spécifiques :
+
+-   opérations sur plusieurs dataframes
+
+-   travail avec des objets non-dataframe (par exemple, des tracés)
+
+‣ Nous verrons cela plus tard dans le cours. Pour l'instant, nous nous concentrerons sur des exemples simples, "jouets".
+
+‣ **Boucles vs cartographie de fonction?**
+
+‣ Souvent, les tâches de boucle peuvent être remplacées par des fonctions personnalisées qui sont ensuite mappées sur un vecteur ou un dataframe.
+
+‣ Mais les boucles sont faciles à apprendre, à comprendre et à déboguer, même pour les débutants.
+
+## Boucle avec un Index
+
+‣ Il est souvent utile de parcourir un vecteur en utilisant un index, qui est un compteur pour l'itération en cours.
+
+‣ Exemple : conversion des âges en années en mois en utilisant un index :
+
+```{r}
+# Rappel :
+ages <- c(7, 8, 9) # Vecteur d'âges
+```
+
+‣ Créez une séquence d'indices de la même longueur que le vecteur des âges :
+
+```{r}
+    # De 1 à la longueur des ages
+    # puis assigner à l'objet appelé indices
+```
+
+‣ Utilisez l'index dans une boucle `for` pour convertir chaque âge en mois :
+
+```{r}
+# pour i dans indices, imprimer ages[i] * 12
+
+```
+
+‣ Le nom de la variable dans la boucle (par exemple, `i`, `j`, `index`) est arbitraire.
+
+‣ Bien sûr, les boucles basées sur des index peuvent être utilisées directement sans une variable séparée :
+
+```{r}
+# pour i de 1 à length(ages), imprimer ages[i] * 12
+
+```
+
+‣ Ces boucles indexées seront utiles pour travailler avec plusieurs vecteurs simultanément.
+
+::: practice
+### Boucle Indexée pour convertir des Heures en Minutes {.unlisted .unnumbered}
+
+Réécrivez votre boucle de la dernière question en utilisant des indices :
+
+```{r, eval = F}
+heures <- c(3, 4, 5) # Vecteur d'heures
+
+# Votre code ici
+
+for ___ {
+  ___
+}
+```
+:::
+
+‣ Remarque : La fonction `seq_along()` est un raccourci pour créer une séquence d'indices.
+
+‣ Équivalent à `1:length()` :
+
+```{r}
+# Ces deux sont des façons équivalentesde générer une séquence d'indices pour `ages`
+
+
+```
+
+# Boucle sur Plusieurs Vecteurs
+
+‣ Faire des boucles avec des indices nous permet de travailler avec plusieurs vecteurs simultanément.
+
+```{r}
+# Considérez :
+ages <- c(7, 8, 9) # âges en années
+tailles <- c(120, 130, 140) # tailles en cm
+```
+
+‣ Nous pouvons faire des boucles à travers les deux en utilisant la méthode d'index :
+
+```{r}
+# pour i de 1 à length(ages), imprimer une chaîne collée avec l'âge et la taille
+
+for(___________________) {
+   
+  
+  print(paste("Age:", age, "Taille:", taille))
+}
+```
+
+‣ À chaque itération :
+
+-   `i` est l'index.
+-   Nous extrayons le ith élément de chaque vecteur
+-   Nous collons les deux ensemble
+-   Nous imprimons le résultat
+
+Alternativement, nous pouvons sauter l'assignation de variable et utiliser les indices dans l'instruction `print()` directement :
+
+```{r}
+for(i in 1:length(ages)) {
+  print(paste("Age:", ages[i], "Taille:", tailles[i]))
+}
+```
+
+::: practice
+### Boucle de Calcul de l'IMC {.unlisted .unnumbered}
+
+En utilisant une boucle `for`, calculez l'Indice de Masse Corporelle (IMC) des trois individus présentés ci-dessous. La formule de l'IMC est `IMC = poids / (taille ^ 2)`.
+
+```{r eval = F}
+poids <- c(30, 32, 35) # Poids en kg
+tailles <- c(1.2, 1.3, 1.4) # Tailles en mètres
+
+for(i in ____________________) {
+
+  __________________________
+  
+  print(paste("Poids :", ____,
+              "Taille :", ____,
+              "IMC :", ____,
+              ))
+  
+}
+
+```
+:::
+
+## Stocker les Résultats de la Boucle
+
+‣ Généralement, nous voulons stocker les résultats de la boucle plutôt que simplement les imprimer.
+
+‣ Exemple : conversion des âges en mois.
+
+```{r}
+# Souvenez-vous de cette boucle :
+ages <- c(7, 8, 9) # Vecteur d'âges
+for(i in 1:length(ages)) {
+  print(ages[i] * 12)
+}
+```
+
+‣ Essayons de stocker ces informations dans un vecteur.
+
+‣ Créer un vecteur vide pour stocker les résultats.
+
+```{r}
+ages_mois <-  # vecteur de mode "numeric" et de longueur 3
+
+```
+
+‣ Comment stocker des valeurs dans ce vecteur ?
+
+```{r}
+                 #Stokez 99 dans le premier élément de ages_mois                   
+                 #Stokez 100 dans le premier élément de ages_mois   
+```
+
+‣ Maintenant, exécutons la boucle, en stockant les résultats dans `ages_mois` :
+
+```{r}
+              # créer un vecteur `age_mois` de mode "numeric" avec la longueur de ages
+              # pour i de 1 à length(ages)
+              # stocker ages[i] * 12 dans ages_mois[i]
+```
+
+::: practice
+### Conversion de la Taille de cm en m {.unlisted .unnumbered}
+
+Utilisez une boucle `for` pour convertir les mesures de taille de cm en m. Stockez les résultats dans un vecteur appelé `taille_m`.
+
+```{r eval = F}
+taille_cm <- c(180, 170, 190, 160, 150) # Tailles en cm 
+
+taille_m <- vector(_______________) # vecteur numérique de même longueur que taille_cm
+
+for ___ {
+  taille_m[i] <- ________________________
+}
+```
+:::
+
+‣ Attention ! Créez votre objet vide **hors** de la boucle pour sauvegarder tous les résultats des itérations.
+
+```{r}
+# Considérez ceci :
+ages <- c(7, 8, 9)
+
+ages_mois <- vector("numeric", length(ages))
+  
+for (i in 1:length(ages)) {
+  ages_mois[i] <- ages[i] * 12
+}
+ages_mois 
+```
+
+‣ Voyez-vous le problème ?
+
+‣ Note à part. Vous êtes pressé ? Initialisez votre vecteur avec `c()` et ajoutez des valeurs :
+
+```{r}
+ages <- c(7, 8, 9)
+ages_mois <- c() # moyen rapide et sale d'initialiser un vecteur
+
+for (i in 1:length(ages)) {
+  ages_mois <- c(ages_mois, ages[i] * 12)
+}
+ages_mois
+
+
+```
+
+
+
+‣ Et, vous pouvez ajouter des valeurs à la fin du vecteur en utilisant `c()` :
+
+```{r}
+    # Refaire la boucle, mais ajouter des valeurs à la fin du vecteur avec 
+
+```
+
+‣ Déconseillé parce que R ne connaît pas la longueur finale du vecteur, il réalloue donc de la mémoire à chaque fois que vous ajoutez une valeur.
+
+‣ Performances lentes avec de grands vecteurs. Mais pour une analyse rapide, c'est correct.
+
+# Instructions `If` dans les Boucles
+
+‣ Les instructions `If` peuvent être intégrées dans les boucles en R.
+
+‣ Exemple : Classification des âges comme "Enfant" s'ils sont inférieurs à 18 ans.
+
+```{r}
+________________ <- c(2, 12, 17, 24, 60) # Vecteur d'âges
+
+# pour age dans age_vec, si age < 18, imprimer "Enfant"
+
+
+```
+
+‣ Utilisez des accolades pour plus de clarté et pour ajouter plus de code.
+
+```{r}
+# mettre ceci dans une boucle:
+    print("En cours de traitement:") 
+    print(paste("Enfant, Âge", age ))
+  
+```
+
+‣ Ajoutons une autre condition avec `else if` pour classer 'Enfant' ou 'Adolescent' en fonction de l'âge.
+
+```{r}
+# Ajoutez else if age >= 13 && age < 18, imprimez "Adolescent"
+for (age in age_vec) {
+  if (age < 13) {
+    print(paste("Enfant, Âge", age))
+  } 
+}
+```
+
+‣ La dernière déclaration `else` pour d'autres âges, classifiés comme 'Adulte'.
+
+```{r}
+# Ajoutez la dernière déclaration else pour "Adulte"
+ 
+```
+
+‣ Nous pouvons stocker ces classifications dans un vecteur en utilisant une boucle basée sur l'index.
+
+```{r}
+age_class <-    #vecteur de mode "character" avec longueur de age_vec
+
+for (i in _____________) {
+ 
+}
+
+age_class
+```
+
+
+
+‣ Utilisez `paste0()` pour combiner la classification avec l'âge.
+
+```{r}
+for (i in 1:length(age_vec)) {
+  # les instructions if devraient sortir vers la variable "out"
+  
+  
+  
+  # puis combinez age_class[i] avec "out" en utilisant paste0()
+  age_class[i] <- paste0(out, ", Âge ", age_vec[i])
+}
+age_class
+```
+
+::: pratique
+### Classification de la Température {.unlisted .unnumbered}
+
+Vous avez un vecteur de températures corporelles en Celsius. Classez chaque température comme 'Hypothermie', 'Normale', ou 'Fièvre' en utilisant une boucle `for` combinée avec des instructions `if` et `else`.
+
+Utilisez ces règles :
+
+-   En dessous de 36.0°C : 'Hypothermie'
+-   Entre 36.0°C et 37.5°C : 'Normale'
+-   Au-dessus de 37.5°C : 'Fièvre'
+
+```{r eval = F}
+body_temps <- c(35, 36.5, 37, 38, 39.5) # Températures corporelles en Celsius
+classif_vec <- vector(______________________) # vecteur de caractères, longueur de body_temps
+for (i in 1:length(________)) {
+    # Ajoutez votre logique if-else ici
+  if (body_temps[i] < 36.0) {
+    out <- "Hypothermie" 
+  } ## ajoutez d'autres conditions
+  
+  
+    # Déclaration finale d'impression
+    classif_vec[i] <- paste(body_temps[i], "°C est", out)
+}
+classif_vec
+```
+
+Un résultat attendu est ci-dessous
+
+```         
+35°C est Hypothermie
+36.5°C est Normal
+37°C est Normal
+38°C est Fièvre
+39.5°C est Fièvre
+```
+:::
+
+# Application réelle des boucles: Génération de multiples graphiques
+
+‣ Utilisation des boucles pour **générer plusieurs graphiques** pour différents groupes au sein d'un jeu de données.
+
+‣ Exemple avec le jeu de données `strep_tb` du package `medicaldata`.
+
+‣ Objectif : créer des **graphiques d'inspection de catégorie** pour chaque **groupe d'amélioration radiologique à 6 mois** en utilisant `inspectdf::inspect_cat()`.
+
+‣ D'abord, créez un **seul graphique** pour le **premier groupe d'amélioration radiologique**.
+
+```{r}
+_______________ <- 
+  medicaldata::strep_tb %>%  
+                          #Filtrer radiologic_6m sur "6_Considerable_improvement"
+                          #inspect_cat
+                          # show_plot
+```
+
+Vous voulez créer des graphiques similaires pour **chaque groupe d'amélioration radiologique**.
+
+‣ Identifiez toutes les valeurs uniques de `medicaldata::strep_tb$radiologic_6m`
+
+```{r}
+niveaux_radiologic_6m <- _______________________
+```
+
+‣ Initiez un **objet liste vide** pour stocker les graphiques.
+
+```{r}
+liste_graphiques_cat <- _______________________
+```
+
+‣ Optionnellement, définissez les noms des éléments de la liste selon les groupes d'amélioration radiologique.
+
+```{r}
+names(liste_graphiques_cat) <- niveaux_radiologic_6m
+liste_graphiques_cat
+```
+
+‣ Assemblons-le
+
+```{r}
+
+for ( _________ in niveaux_radiologic_6m ) {
+  
+  #créer un graphique pour chaque niveau
+  _________ <- 
+  medicaldata::strep_tb %>%  
+  filter (________________) %>% 
+  inspectdf::inspect_cat() %>% 
+  inspectdf::show_plot()
+  
+  # Ajoute à la liste
+  liste_graphiques_cat[[____________]] <- ______________
+}
+```
+
+‣ Accédez à un graphique spécifique en utilisant la **syntaxe à double crochets** ou par numéro.
+
+```{r}
+liste_graphiques_cat[[___________________]] # "6_Considerable_improvement"
+```
+
+```{r}
+liste_graphiques_cat[[1]]
+```
+
+‣ Pour afficher tous les graphiques en une fois, appelez la liste entière.
+
+```{r fig.height = 2, fig.show='hold', message=F}
+liste_graphiques_cat
+```
+
+::: pratique
+### Visualisation des cas de tuberculose {.unlisted .unnumbered}
+
+Dans cet exercice, vous utiliserez les données de l'OMS provenant du package `tidyr` pour créer des graphiques en ligne montrant le nombre de nouveaux cas de tuberculose chez les enfants au fil des années dans les pays sud-américains.
+
+D'abord, nous préparerons les données :
+
+```{r}
+cas_tb_enfants <- tidyr::who2 %>% 
+  transmute(country, year, 
+            cas_tb_enfants = sp_m_014 + sp_f_014 + sn_m_014 + sn_f_014) %>% 
+  filter(country %in% c("Brazil", "Colombia", "Argentina", 
+                        "Uruguay", "Chilie", "Guyana"))  %>% 
+  filter(year >= 2006)
+
+cas_tb_enfants
+```
+
+Maintenant, remplissez les blancs dans le modèle ci-dessous pour créer un graphique en ligne pour chaque pays en utilisant une boucle `for` :
+
+```{r}
+# Obtenir la liste des pays. Astuce : Utilisez unique() sur la colonne pays
+pays <- _____________________________________________ 
+
+# Créer une liste pour stocker les graphiques. Astuce : Initialiser une liste vide
+graphiques_cas_tb_enfants <- vector("list", ________________)
+names(graphiques_cas_tb_enfants) <- pays # Définir les noms des éléments de la liste
+
+# Boucle à travers les pays
+for (country in _____________) { 
+  
+  # Filtrer les données pour chaque pays
+  cas_tb_enfants_filtres <- _____________________________________________ 
+  
+  # Créer le graphique
+  graphique_cas_tb_enfants <- _____________________________________________  
+  
+  # Ajouter à la liste. Astuce : Utilisez des doubles crochets
+  graphiques_cas_tb_enfants[[country]] <- graphique_cas_tb_enfants 
+}
+
+graphiques_cas_tb_enfants
+```
+:::
+
+# Conclusion
+
+Dans cette leçon, nous avons exploré les boucles for en R, démontrant leur utilité pour les tâches basiques jusqu'à l'analyse de données complexes impliquant plusieurs jeux de données et la génération de graphiques. Malgré la préférence de R pour les opérations vectorisées, les boucles for sont indispensables dans certaines situations. Espérons que cette leçon vous a fourni les compétences nécessaires pour implémenter avec confiance les boucles for dans divers contextes de traitement de données.
+
+
+# Solutions
+
+### Boucle de base de conversion d'heures en minutes
+
+```{r}
+heures <- c(3, 4, 5) # Vecteur d'heures
+
+for (heure in heures) {
+  minutes <- heure * 60
+  print(minutes)
+}
+```
+
+### Boucle indexée de conversion d'heures en minutes
+
+```{r}
+heures <- c(3, 4, 5) # Vecteur d'heures
+
+for (i in 1:length(heures)) {
+  minutes <- heures[i] * 60
+  print(minutes)
+}
+```
+
+### Boucle de calcul de l'IMC
+
+```{r}
+poids <- c(30, 32, 35) # Poids en kg
+tailles <- c(1.2, 1.3, 1.4) # Tailles en mètres
+
+for(i in 1:length(poids)) {
+  imc <- poids[i] / (tailles[i] ^ 2)
+  
+  print(paste("Poids:", poids[i],
+              "Taille:", tailles[i],
+              "IMC:", imc))
+}
+```
+
+### Conversion de la taille de cm à m
+
+```{r}
+taille_cm <- c(180, 170, 190, 160, 150) # Tailles en cm 
+
+taille_m <- vector("numeric", length = length(taille_cm)) 
+
+for (i in 1:length(taille_cm)) {
+  taille_m[i] <- taille_cm[i] / 100
+}
+taille_m
+```
+
+### Classification de la Température
+
+```{r}
+temp_corps <- c(35, 36.5, 37, 38, 39.5) # Températures corporelles en Celsius
+vec_classif <- vector("character", length = length(temp_corps)) # vecteur de caractères
+
+for (i in 1:length(temp_corps)) {
+    # Ajoutez votre logique if-else ici
+    if (temp_corps[i] < 36) {
+        sorti <- "Hypothermie"
+    } else if (temp_corps[i] <= 37.5) {
+        sorti <- "Normal"
+    } else {
+        sorti <- "Fièvre"
+    }
+  
+    # Déclaration d'impression finale
+    vec_classif[i] <- paste(temp_corps[i], "°C est", sorti)
+}
+vec_classif
+```
+
+### Visualisation des cas de TB
+
+```{r}
+# En supposant que tb_child_cases est un dataframe avec les colonnes nécessaires
+pays <- unique(tb_child_cases$pays)
+
+# Créer une liste pour stocker les tracés
+plots_cas_tb_enfants <- vector("list", length(pays))
+names(plots_cas_tb_enfants) <- pays
+
+# Boucle à travers les pays
+for (nom_pays in pays) { 
+  
+  # Filtrer les données pour chaque pays
+  tb_child_cases_filtre <- filter(tb_child_cases, pays == nom_pays)
+  
+  # Créer le tracé
+  plot_cas_tb_enfants <- ggplot(tb_child_cases_filtre, aes(x = annee, y = tb_cas_enfants)) +
+    geom_line() +
+    ggtitle(paste("Cas de TB chez les enfants -", nom_pays))
+  
+  # Ajouter à la liste
+  plots_cas_tb_enfants[[nom_pays]] <- plot_cas_tb_enfants 
+}
+
+plots_cas_tb_enfants[["Uruguay"]]
+```
+
+# Contributeurs {.unlisted .unnumbered}
+
+Les membres de l'équipe suivants ont contribué à cette leçon :
+
+`r tgc_contributors_list(ids = c("sabina", "kendavidn", "guy"))` (assurez-vous de mettre à jour la liste des contributeurs en conséquence !)
+
+------------------------------------------------------------------------
+
+# References {.unnumbered .unlisted}
+
+Certains matériaux de cette leçon ont été adaptés des sources suivantes :
+
+-   Barnier, Julien. "Introduction à R et au tidyverse." <https://juba.github.io/tidyverse>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R pour la science des données." <https://r4ds.had.co.nz/>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R pour la science des données (2e)." <https://r4ds.hadley.nz/>
