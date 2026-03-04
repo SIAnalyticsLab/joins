@@ -19,13 +19,7 @@ resources:
 
 ## Slides
 
-The following slides are embedded from the `slides` folder.  
-Ensure the directory structure is:
-
-slides/data_viz_types/Slide1.jpeg  
-slides/data_viz_types/Slide2.jpeg  
-...  
-slides/data_viz_types/Slide14.jpeg  
+You can review the slides below, which was used to record the video. Or you can jump directly to the following sections, which contain more detail about each type of visualization.
 
 ### Slide 1
 ![](slides/data_viz_types/Slide1.jpeg)
