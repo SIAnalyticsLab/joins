@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="SI Analytics">
+
+<title>Lesson Note | Bivariate and multivariate Graphs with Plotly Express</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="r_data_on_display_multivariate_files/libs/clipboard/clipboard.min.js"></script>
+<script src="r_data_on_display_multivariate_files/libs/quarto-html/quarto.js"></script>
+<script src="r_data_on_display_multivariate_files/libs/quarto-html/popper.min.js"></script>
+<script src="r_data_on_display_multivariate_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="r_data_on_display_multivariate_files/libs/quarto-html/anchor.min.js"></script>
+<link href="r_data_on_display_multivariate_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="r_data_on_display_multivariate_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="r_data_on_display_multivariate_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="r_data_on_display_multivariate_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="r_data_on_display_multivariate_files/libs/bootstrap/bootstrap-8a79a254b8e706d3c925cde0a310d4f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="r_data_on_display_multivariate_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="r_data_on_display_multivariate_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="r_data_on_display_multivariate_files/libs/plotly-binding-4.11.0/plotly.js"></script>
+
+<script src="r_data_on_display_multivariate_files/libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="r_data_on_display_multivariate_files/libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="r_data_on_display_multivariate_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="r_data_on_display_multivariate_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="r_data_on_display_multivariate_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="r_data_on_display_multivariate_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+
+<link rel="stylesheet" href="global/style/si-analytics.css">
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries">Libraries</a></li>
+  <li><a href="#numeric-vs-numeric-data" id="toc-numeric-vs-numeric-data" class="nav-link" data-scroll-target="#numeric-vs-numeric-data">Numeric vs Numeric Data</a>
+  <ul class="collapse">
+  <li><a href="#scatter-plot" id="toc-scatter-plot" class="nav-link" data-scroll-target="#scatter-plot">Scatter Plot</a></li>
+  <li><a href="#improved-scatter-plot" id="toc-improved-scatter-plot" class="nav-link" data-scroll-target="#improved-scatter-plot">Improved Scatter Plot</a></li>
+  </ul></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#numeric-vs-categorical" id="toc-numeric-vs-categorical" class="nav-link" data-scroll-target="#numeric-vs-categorical">Numeric vs Categorical</a>
+  <ul class="collapse">
+  <li><a href="#grouped-histogram" id="toc-grouped-histogram" class="nav-link" data-scroll-target="#grouped-histogram">Grouped Histogram</a></li>
+  <li><a href="#overlay-histogram" id="toc-overlay-histogram" class="nav-link" data-scroll-target="#overlay-histogram">Overlay Histogram</a></li>
+  </ul></li>
+  <li><a href="#violin-and-box-plots" id="toc-violin-and-box-plots" class="nav-link" data-scroll-target="#violin-and-box-plots">Violin and Box Plots</a>
+  <ul class="collapse">
+  <li><a href="#box-plot" id="toc-box-plot" class="nav-link" data-scroll-target="#box-plot">Box plot</a></li>
+  </ul></li>
+  <li><a href="#summary-bar-charts-mean-and-standard-deviation" id="toc-summary-bar-charts-mean-and-standard-deviation" class="nav-link" data-scroll-target="#summary-bar-charts-mean-and-standard-deviation">Summary Bar Charts (Mean and Standard Deviation)</a></li>
+  <li><a href="#categorical-vs-categorical" id="toc-categorical-vs-categorical" class="nav-link" data-scroll-target="#categorical-vs-categorical">Categorical vs Categorical</a>
+  <ul class="collapse">
+  <li><a href="#stacked-bar-chart" id="toc-stacked-bar-chart" class="nav-link" data-scroll-target="#stacked-bar-chart">Stacked Bar Chart</a></li>
+  <li><a href="#percent-stacked-bar-chart" id="toc-percent-stacked-bar-chart" class="nav-link" data-scroll-target="#percent-stacked-bar-chart">Percent Stacked Bar Chart</a></li>
+  <li><a href="#clustered-bar-chart" id="toc-clustered-bar-chart" class="nav-link" data-scroll-target="#clustered-bar-chart">Clustered Bar Chart</a></li>
+  </ul></li>
+  <li><a href="#time-series" id="toc-time-series" class="nav-link" data-scroll-target="#time-series">Time Series</a>
+  <ul class="collapse">
+  <li><a href="#bar-chart" id="toc-bar-chart" class="nav-link" data-scroll-target="#bar-chart">Bar Chart</a></li>
+  <li><a href="#line-chart" id="toc-line-chart" class="nav-link" data-scroll-target="#line-chart">Line Chart</a></li>
+  <li><a href="#compare-nigeria-and-ghana" id="toc-compare-nigeria-and-ghana" class="nav-link" data-scroll-target="#compare-nigeria-and-ghana">Compare Nigeria and Ghana</a></li>
+  </ul></li>
+  <li><a href="#plots-with-three-or-more-variables" id="toc-plots-with-three-or-more-variables" class="nav-link" data-scroll-target="#plots-with-three-or-more-variables">Plots with three or more variables</a>
+  <ul class="collapse">
+  <li><a href="#bubble-charts" id="toc-bubble-charts" class="nav-link" data-scroll-target="#bubble-charts">Bubble Charts</a></li>
+  </ul></li>
+  <li><a href="#tips-bubble-chart" id="toc-tips-bubble-chart" class="nav-link" data-scroll-target="#tips-bubble-chart">Tips Bubble Chart</a></li>
+  <li><a href="#facet-plots" id="toc-facet-plots" class="nav-link" data-scroll-target="#facet-plots">Facet Plots</a></li>
+  <li><a href="#faceted-violin-plot" id="toc-faceted-violin-plot" class="nav-link" data-scroll-target="#faceted-violin-plot">Faceted Violin Plot</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lesson Note | Bivariate and multivariate Graphs with Plotly Express</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>SI Analytics </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lesson, you’ll learn how to create <strong>bivariate and multivariate graphs using Plotly in R</strong>.<br>
+These types of graphs are essential for exploring relationships between two or more variables, whether they are quantitative or categorical. Understanding these relationships can provide deeper insights into your data.</p>
+<p>Let’s dive in!</p>
+</section>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<p>By the end of this lesson, you will be able to:</p>
+<p>-Create scatter plots for quantitative vs.&nbsp;quantitative data -Generate grouped histograms and violin plots for quantitative vs.&nbsp;categorical data -Create grouped, stacked, and percent-stacked bar charts for categorical vs.&nbsp;categorical data -Visualize time series data using bar charts and line charts -Create bubble charts to display relationships between three or more variables -Use faceting to compare distributions across subsets of data</p>
+</section>
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
+<p>This lesson requires <em>plotly</em>, <em>dplyr</em> and <em>janitor</em>. Install them if you haven’t already.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="numeric-vs-numeric-data" class="level2">
+<h2 class="anchored" data-anchor-id="numeric-vs-numeric-data">Numeric vs Numeric Data</h2>
+<p>When both variables are quantitative, scatter plots are an excellent way to visualize their relationship.</p>
+<section id="scatter-plot" class="level3">
+<h3 class="anchored" data-anchor-id="scatter-plot">Scatter Plot</h3>
+<p>Let’s create a scatter plot to examine the relationship between total_bill and tip in the tips dataset. The tips dataset is included in Plotly Express and contains information about restaurant bills and tips that were collected by a waiter in a US restaurant.</p>
+<p>First, we’ll load the dataset and view the first five rows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tips <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/plotly/datasets/master/tips.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tips)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  total_bill  tip    sex smoker day   time size
+1      16.99 1.01 Female     No Sun Dinner    2
+2      10.34 1.66   Male     No Sun Dinner    3
+3      21.01 3.50   Male     No Sun Dinner    3
+4      23.68 3.31   Male     No Sun Dinner    2
+5      24.59 3.61 Female     No Sun Dinner    4
+6      25.29 4.71   Male     No Sun Dinner    4</code></pre>
+</div>
+</div>
+<p>Next, we’ll create a basic scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>total_bill,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ae8d33f04365534f5a12" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ae8d33f04365534f5a12">{"x":{"visdat":{"4c3865b33c21":["function () ","plotlyVisDat"]},"cur_data":"4c3865b33c21","attrs":{"4c3865b33c21":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"total_bill"},"yaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[16.989999999999998,10.34,21.010000000000002,23.68,24.59,25.289999999999999,8.7699999999999996,26.879999999999999,15.039999999999999,14.779999999999999,10.27,35.259999999999998,15.42,18.43,14.83,21.579999999999998,10.33,16.289999999999999,16.969999999999999,20.649999999999999,17.920000000000002,20.289999999999999,15.77,39.420000000000002,19.82,17.809999999999999,13.369999999999999,12.69,21.699999999999999,19.649999999999999,9.5500000000000007,18.350000000000001,15.06,20.690000000000001,17.780000000000001,24.059999999999999,16.309999999999999,16.93,18.690000000000001,31.27,16.039999999999999,17.460000000000001,13.94,9.6799999999999997,30.399999999999999,18.289999999999999,22.23,32.399999999999999,28.550000000000001,18.039999999999999,12.539999999999999,10.289999999999999,34.810000000000002,9.9399999999999995,25.559999999999999,19.489999999999998,38.009999999999998,26.41,11.24,48.270000000000003,20.289999999999999,13.81,11.02,18.289999999999999,17.59,20.079999999999998,16.449999999999999,3.0699999999999998,20.23,15.01,12.02,17.07,26.859999999999999,25.280000000000001,14.73,10.51,17.920000000000002,27.199999999999999,22.760000000000002,17.289999999999999,19.440000000000001,16.66,10.07,32.68,15.98,34.829999999999998,13.029999999999999,18.280000000000001,24.710000000000001,21.16,28.969999999999999,22.489999999999998,5.75,16.32,22.75,40.170000000000002,27.280000000000001,12.029999999999999,21.010000000000002,12.460000000000001,11.35,15.380000000000001,44.299999999999997,22.420000000000002,20.920000000000002,15.359999999999999,20.489999999999998,25.210000000000001,18.239999999999998,14.31,14,7.25,38.07,23.949999999999999,25.710000000000001,17.309999999999999,29.93,10.65,12.43,24.079999999999998,11.69,13.42,14.26,15.949999999999999,12.48,29.800000000000001,8.5199999999999996,14.52,11.380000000000001,22.82,19.079999999999998,20.27,11.17,12.26,18.260000000000002,8.5099999999999998,10.33,14.15,16,13.16,17.469999999999999,34.299999999999997,41.189999999999998,27.050000000000001,16.43,8.3499999999999996,18.640000000000001,11.869999999999999,9.7799999999999994,7.5099999999999998,14.07,13.130000000000001,17.260000000000002,24.550000000000001,19.77,29.850000000000001,48.170000000000002,25,13.390000000000001,16.489999999999998,21.5,12.66,16.210000000000001,13.81,17.510000000000002,24.52,20.760000000000002,31.710000000000001,10.59,10.630000000000001,50.810000000000002,15.81,7.25,31.850000000000001,16.82,32.899999999999999,17.890000000000001,14.48,9.5999999999999996,34.630000000000003,34.649999999999999,23.329999999999998,45.350000000000001,23.170000000000002,40.549999999999997,20.690000000000001,20.899999999999999,30.460000000000001,18.149999999999999,23.100000000000001,15.69,19.809999999999999,28.440000000000001,15.48,16.579999999999998,7.5599999999999996,10.34,43.109999999999999,13,13.51,18.710000000000001,12.74,13,16.399999999999999,20.530000000000001,16.469999999999999,26.59,38.729999999999997,24.27,12.76,30.059999999999999,25.890000000000001,48.329999999999998,13.27,28.170000000000002,12.9,28.149999999999999,11.59,7.7400000000000002,30.140000000000001,12.16,13.42,8.5800000000000001,15.98,13.42,16.27,10.09,20.449999999999999,13.279999999999999,22.120000000000001,24.010000000000002,15.69,11.609999999999999,10.77,15.529999999999999,10.07,12.6,32.829999999999998,35.829999999999998,29.030000000000001,27.18,22.670000000000002,17.82,18.780000000000001],"y":[1.01,1.6599999999999999,3.5,3.3100000000000001,3.6099999999999999,4.71,2,3.1200000000000001,1.96,3.23,1.71,5,1.5700000000000001,3,3.02,3.9199999999999999,1.6699999999999999,3.71,3.5,3.3500000000000001,4.0800000000000001,2.75,2.23,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,3,1.45,2.5,3,2.4500000000000002,3.27,3.6000000000000001,2,3.0699999999999998,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,2.6000000000000001,5.2000000000000002,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.5,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.4700000000000002,1,2.0099999999999998,2.0899999999999999,1.97,3,3.1400000000000001,5,2.2000000000000002,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,1.8300000000000001,5,2.0299999999999998,5.1699999999999999,2,4,5.8499999999999996,3,3,3.5,1,4.2999999999999998,3.25,4.7300000000000004,4,1.5,3,1.5,2.5,3,2.5,3.48,4.0800000000000001,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,4,3,1,4,2.5499999999999998,4,3.5,5.0700000000000003,1.5,1.8,2.9199999999999999,2.3100000000000001,1.6799999999999999,2.5,2,2.52,4.2000000000000002,1.48,2,2,2.1800000000000002,1.5,2.8300000000000001,1.5,2,3.25,1.25,2,2,2,2.75,3.5,6.7000000000000002,5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,1.73,2,2.5,2,2.7400000000000002,2,2,5.1399999999999997,5,3.75,2.6099999999999999,2,3.5,2.5,2,2,3,3.48,2.2400000000000002,4.5,1.6100000000000001,2,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,4,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,3.5,2,3.5,4,1.5,4.1900000000000004,2.5600000000000001,2.02,4,1.4399999999999999,2,5,2,2,4,2.0099999999999998,2,2.5,4,3.23,3.4100000000000001,3,2.0299999999999998,2.23,2,5.1600000000000001,9,2.5,6.5,1.1000000000000001,3,1.5,1.4399999999999999,3.0899999999999999,2.2000000000000002,3.48,1.9199999999999999,3,1.5800000000000001,2.5,2,3,2.7200000000000002,2.8799999999999999,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,4.6699999999999999,5.9199999999999999,2,2,1.75,3],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="improved-scatter-plot" class="level3">
+<h3 class="anchored">Improved Scatter Plot</h3>
+<p>From the scatter plot, we can observe that as the total bill increases, the tip amount tends to increase as well.</p>
+<p>Let’s enhance the scatter plot by adding labels and a title.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>total_bill,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Relationship Between Total Bill and Tip Amount"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Total Bill ($)"</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Tip ($)"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-fb605325ad6cac5b59c4" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fb605325ad6cac5b59c4">{"x":{"visdat":{"4c386324e17":["function () ","plotlyVisDat"]},"cur_data":"4c386324e17","attrs":{"4c386324e17":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Relationship Between Total Bill and Tip Amount","xaxis":{"domain":[0,1],"automargin":true,"title":"Total Bill ($)"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Tip ($)"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[16.989999999999998,10.34,21.010000000000002,23.68,24.59,25.289999999999999,8.7699999999999996,26.879999999999999,15.039999999999999,14.779999999999999,10.27,35.259999999999998,15.42,18.43,14.83,21.579999999999998,10.33,16.289999999999999,16.969999999999999,20.649999999999999,17.920000000000002,20.289999999999999,15.77,39.420000000000002,19.82,17.809999999999999,13.369999999999999,12.69,21.699999999999999,19.649999999999999,9.5500000000000007,18.350000000000001,15.06,20.690000000000001,17.780000000000001,24.059999999999999,16.309999999999999,16.93,18.690000000000001,31.27,16.039999999999999,17.460000000000001,13.94,9.6799999999999997,30.399999999999999,18.289999999999999,22.23,32.399999999999999,28.550000000000001,18.039999999999999,12.539999999999999,10.289999999999999,34.810000000000002,9.9399999999999995,25.559999999999999,19.489999999999998,38.009999999999998,26.41,11.24,48.270000000000003,20.289999999999999,13.81,11.02,18.289999999999999,17.59,20.079999999999998,16.449999999999999,3.0699999999999998,20.23,15.01,12.02,17.07,26.859999999999999,25.280000000000001,14.73,10.51,17.920000000000002,27.199999999999999,22.760000000000002,17.289999999999999,19.440000000000001,16.66,10.07,32.68,15.98,34.829999999999998,13.029999999999999,18.280000000000001,24.710000000000001,21.16,28.969999999999999,22.489999999999998,5.75,16.32,22.75,40.170000000000002,27.280000000000001,12.029999999999999,21.010000000000002,12.460000000000001,11.35,15.380000000000001,44.299999999999997,22.420000000000002,20.920000000000002,15.359999999999999,20.489999999999998,25.210000000000001,18.239999999999998,14.31,14,7.25,38.07,23.949999999999999,25.710000000000001,17.309999999999999,29.93,10.65,12.43,24.079999999999998,11.69,13.42,14.26,15.949999999999999,12.48,29.800000000000001,8.5199999999999996,14.52,11.380000000000001,22.82,19.079999999999998,20.27,11.17,12.26,18.260000000000002,8.5099999999999998,10.33,14.15,16,13.16,17.469999999999999,34.299999999999997,41.189999999999998,27.050000000000001,16.43,8.3499999999999996,18.640000000000001,11.869999999999999,9.7799999999999994,7.5099999999999998,14.07,13.130000000000001,17.260000000000002,24.550000000000001,19.77,29.850000000000001,48.170000000000002,25,13.390000000000001,16.489999999999998,21.5,12.66,16.210000000000001,13.81,17.510000000000002,24.52,20.760000000000002,31.710000000000001,10.59,10.630000000000001,50.810000000000002,15.81,7.25,31.850000000000001,16.82,32.899999999999999,17.890000000000001,14.48,9.5999999999999996,34.630000000000003,34.649999999999999,23.329999999999998,45.350000000000001,23.170000000000002,40.549999999999997,20.690000000000001,20.899999999999999,30.460000000000001,18.149999999999999,23.100000000000001,15.69,19.809999999999999,28.440000000000001,15.48,16.579999999999998,7.5599999999999996,10.34,43.109999999999999,13,13.51,18.710000000000001,12.74,13,16.399999999999999,20.530000000000001,16.469999999999999,26.59,38.729999999999997,24.27,12.76,30.059999999999999,25.890000000000001,48.329999999999998,13.27,28.170000000000002,12.9,28.149999999999999,11.59,7.7400000000000002,30.140000000000001,12.16,13.42,8.5800000000000001,15.98,13.42,16.27,10.09,20.449999999999999,13.279999999999999,22.120000000000001,24.010000000000002,15.69,11.609999999999999,10.77,15.529999999999999,10.07,12.6,32.829999999999998,35.829999999999998,29.030000000000001,27.18,22.670000000000002,17.82,18.780000000000001],"y":[1.01,1.6599999999999999,3.5,3.3100000000000001,3.6099999999999999,4.71,2,3.1200000000000001,1.96,3.23,1.71,5,1.5700000000000001,3,3.02,3.9199999999999999,1.6699999999999999,3.71,3.5,3.3500000000000001,4.0800000000000001,2.75,2.23,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,3,1.45,2.5,3,2.4500000000000002,3.27,3.6000000000000001,2,3.0699999999999998,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,2.6000000000000001,5.2000000000000002,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.5,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.4700000000000002,1,2.0099999999999998,2.0899999999999999,1.97,3,3.1400000000000001,5,2.2000000000000002,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,1.8300000000000001,5,2.0299999999999998,5.1699999999999999,2,4,5.8499999999999996,3,3,3.5,1,4.2999999999999998,3.25,4.7300000000000004,4,1.5,3,1.5,2.5,3,2.5,3.48,4.0800000000000001,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,4,3,1,4,2.5499999999999998,4,3.5,5.0700000000000003,1.5,1.8,2.9199999999999999,2.3100000000000001,1.6799999999999999,2.5,2,2.52,4.2000000000000002,1.48,2,2,2.1800000000000002,1.5,2.8300000000000001,1.5,2,3.25,1.25,2,2,2,2.75,3.5,6.7000000000000002,5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,1.73,2,2.5,2,2.7400000000000002,2,2,5.1399999999999997,5,3.75,2.6099999999999999,2,3.5,2.5,2,2,3,3.48,2.2400000000000002,4.5,1.6100000000000001,2,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,4,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,3.5,2,3.5,4,1.5,4.1900000000000004,2.5600000000000001,2.02,4,1.4399999999999999,2,5,2,2,4,2.0099999999999998,2,2.5,4,3.23,3.4100000000000001,3,2.0299999999999998,2.23,2,5.1600000000000001,9,2.5,6.5,1.1000000000000001,3,1.5,1.4399999999999999,3.0899999999999999,2.2000000000000002,3.48,1.9199999999999999,3,1.5800000000000001,2.5,2,3,2.7200000000000002,2.8799999999999999,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,4.6699999999999999,5.9199999999999999,2,2,1.75,3],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practice
+</div>
+</div>
+<section id="practice" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="practice">Practice:</h2>
+<p>Create a scatter plot showing <strong>GDP per capita vs life expectancy</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Datasets</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>gapminder <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>g_2007 <span class="ot">&lt;-</span> gapminder <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2007</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(g_2007)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      country year      pop continent lifeExp  gdpPercap
+1 Afghanistan 2007 31889923      Asia  43.828   974.5803
+2     Albania 2007  3600523    Europe  76.423  5937.0295
+3     Algeria 2007 33333216    Africa  72.301  6223.3675
+4      Angola 2007 12420476    Africa  42.731  4797.2313
+5   Argentina 2007 40301927  Americas  75.320 12779.3796
+6   Australia 2007 20434176   Oceania  81.235 34435.3674</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</section>
+</section>
+<section id="solution" class="level2">
+<h2 class="anchored" data-anchor-id="solution">Solution</h2>
+<p>Create a scatter plot showing <strong>GDP per capita vs life expectancy</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  g_2007,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>gdpPercap,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>lifeExp,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Life Expectancy vs GDP per Capita (2007)"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"GDP per Capita"</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Life Expectancy"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-812c6b5c85c5305a5a78" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-812c6b5c85c5305a5a78">{"x":{"visdat":{"4c387dcd6cac":["function () ","plotlyVisDat"]},"cur_data":"4c387dcd6cac","attrs":{"4c387dcd6cac":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Life Expectancy vs GDP per Capita (2007)","xaxis":{"domain":[0,1],"automargin":true,"title":"GDP per Capita"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Life Expectancy"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[974.58033839999996,5937.0295260000003,6223.3674650000003,4797.2312670000001,12779.379639999999,34435.367440000002,36126.492700000003,29796.048340000001,1391.253792,33692.605080000001,1441.2848730000001,3822.137084,7446.2988029999997,12569.851769999999,9065.8008250000003,10680.792820000001,1217.0329939999999,430.07069159999998,1713.7786860000001,2042.0952400000001,36319.235009999997,706.01653699999997,1704.0637240000001,13171.638849999999,4959.1148540000004,7006.5804189999999,986.14787920000003,277.55185870000003,3632.5577979999998,9645.06142,1544.7501119999999,14619.22272,8948.1029230000004,22833.308509999999,35278.418740000001,2082.4815669999998,6025.3747519999997,6873.262326,5581.1809979999998,5728.3535140000004,12154.089749999999,641.36952359999998,690.80557590000001,33207.0844,30470.0167,13206.48452,752.74972649999995,32170.37442,1327.6089099999999,27538.41188,5186.0500030000003,942.6542111,579.23174300000005,1201.637154,3548.3308459999998,39724.978669999997,18008.944439999999,36180.789190000003,2452.210407,3540.6515639999998,11605.71449,4471.0619059999999,40675.996350000001,25523.277099999999,28569.719700000001,7320.8802619999997,31656.068060000001,4519.4611709999999,1463.249282,1593.06548,23348.139729999999,47306.989780000004,10461.05868,1569.3314419999999,414.5073415,12057.49928,1044.7701259999999,759.34991009999999,12451.6558,1042.581557,1803.151496,10956.991120000001,11977.57496,3095.7722709999998,9253.896111,3820.1752299999998,823.68562050000003,944,4811.0604290000001,1091.359778,36797.933319999996,25185.009109999999,2749.3209649999999,619.67689240000004,2013.9773049999999,49357.190170000002,22316.192869999999,2605.94758,9809.1856360000002,4172.8384640000004,7408.9055609999996,3190.4810160000002,15389.92468,20509.64777,19328.709009999999,7670.122558,10808.47561,863.08846389999997,1598.4350890000001,21654.83194,1712.4721360000001,9786.5347139999994,862.54075609999995,47143.179640000002,18678.314350000001,25768.257590000001,926.14106830000003,9269.6578079999999,28821.063699999999,3970.0954069999998,2602.3949950000001,4513.4806429999999,33859.748350000002,37506.419070000004,4184.5480889999999,28718.276839999999,1107.482182,7458.3963270000004,882.96994380000001,18008.509239999999,7092.9230250000001,8458.2763840000007,1056.3801209999999,33203.261279999999,42951.65309,10611.46299,11415.805689999999,2441.5764039999999,3025.3497980000002,2280.769906,1271.211593,469.70929810000001],"y":[43.828000000000003,76.423000000000002,72.301000000000002,42.731000000000002,75.319999999999993,81.234999999999999,79.828999999999994,75.635000000000005,64.061999999999998,79.441000000000003,56.728000000000002,65.554000000000002,74.852000000000004,50.728000000000002,72.390000000000001,73.004999999999995,52.295000000000002,49.579999999999998,59.722999999999999,50.43,80.653000000000006,44.741,50.651000000000003,78.552999999999997,72.960999999999999,72.888999999999996,65.152000000000001,46.462000000000003,55.322000000000003,78.781999999999996,48.328000000000003,75.748000000000005,78.272999999999996,76.486000000000004,78.331999999999994,54.790999999999997,72.234999999999999,74.994,71.337999999999994,71.878,51.579000000000001,58.039999999999999,52.947000000000003,79.313000000000002,80.656999999999996,56.734999999999999,59.448,79.406000000000006,60.021999999999998,79.483000000000004,70.259,56.006999999999998,46.387999999999998,60.915999999999997,70.197999999999993,82.207999999999998,73.337999999999994,81.757000000000005,64.697999999999993,70.650000000000006,70.963999999999999,59.545000000000002,78.885000000000005,80.745000000000005,80.546000000000006,72.566999999999993,82.602999999999994,72.534999999999997,54.109999999999999,67.296999999999997,78.623000000000005,77.587999999999994,71.992999999999995,42.591999999999999,45.677999999999997,73.951999999999998,59.442999999999998,48.302999999999997,74.241,54.466999999999999,64.164000000000001,72.801000000000002,76.194999999999993,66.802999999999997,74.543000000000006,71.164000000000001,42.082000000000001,62.069000000000003,52.905999999999999,63.784999999999997,79.762,80.203999999999994,72.899000000000001,56.866999999999997,46.859000000000002,80.195999999999998,75.640000000000001,65.483000000000004,75.537000000000006,71.751999999999995,71.421000000000006,71.688000000000002,75.563000000000002,78.097999999999999,78.745999999999995,76.441999999999993,72.475999999999999,46.241999999999997,65.528000000000006,72.777000000000001,63.061999999999998,74.001999999999995,42.567999999999998,79.971999999999994,74.662999999999997,77.926000000000002,48.158999999999999,49.338999999999999,80.941000000000003,72.396000000000001,58.555999999999997,39.613,80.884,81.700999999999993,74.143000000000001,78.400000000000006,52.517000000000003,70.616,58.420000000000002,69.819000000000003,73.923000000000002,71.777000000000001,51.542000000000002,79.424999999999997,78.242000000000004,76.384,73.747,74.248999999999995,73.421999999999997,62.698,42.384,43.487000000000002],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="numeric-vs-categorical" class="level2">
+<h2 class="anchored" data-anchor-id="numeric-vs-categorical">Numeric vs Categorical</h2>
+<p>When one variable is quantitative and the other is categorical, we can use grouped histograms, violin plots, or box plots to visualize the distribution of the quantitative variable across different categories.</p>
+<section id="grouped-histogram" class="level3">
+<h3 class="anchored" data-anchor-id="grouped-histogram">Grouped Histogram</h3>
+<p>First, here’s how you can create a regular histogram of all tips:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>tip,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"histogram"</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-01abfbcf8910a5f50a60" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-01abfbcf8910a5f50a60">{"x":{"visdat":{"4c3861925d92":["function () ","plotlyVisDat"]},"cur_data":"4c3861925d92","attrs":{"4c3861925d92":{"x":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"yaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1.01,3.6099999999999999,5,3.02,1.6699999999999999,3.5,2.75,2.23,3,3,2.4500000000000002,3.0699999999999998,2.6000000000000001,5.2000000000000002,1.5,2.4700000000000002,1,3,3.1400000000000001,5,2.2000000000000002,1.8300000000000001,5.1699999999999999,1,4.2999999999999998,3.25,2.5,3,2.5,3.48,4.0800000000000001,4,1,4,3.5,1.5,1.8,2.9199999999999999,1.6799999999999999,2.52,4.2000000000000002,2,2,2.8300000000000001,1.5,2,3.25,1.25,2,2,2.75,3.5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,5.1399999999999997,3.75,2.6099999999999999,2,3,1.6100000000000001,2,4,3.5,3.5,4.1900000000000004,5,2,2.0099999999999998,2,2.5,3.23,2.23,2.5,6.5,1.1000000000000001,3.0899999999999999,3.48,3,2.5,2,2.8799999999999999,4.6699999999999999,2,3],"type":"histogram","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1.6599999999999999,3.5,3.3100000000000001,4.71,2,3.1200000000000001,1.96,3.23,1.71,1.5700000000000001,3,3.9199999999999999,3.71,3.3500000000000001,4.0800000000000001,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,1.45,2.5,3.27,3.6000000000000001,2,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.0099999999999998,2.0899999999999999,1.97,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,5,2.0299999999999998,2,4,5.8499999999999996,3,3,3.5,4.7300000000000004,4,1.5,3,1.5,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,3,4,2.5499999999999998,5.0700000000000003,2.3100000000000001,2.5,2,1.48,2.1800000000000002,1.5,2,6.7000000000000002,5,1.73,2,2.5,2,2.7400000000000002,2,2,5,2,3.5,2.5,2,3.48,2.2400000000000002,4.5,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,2,4,1.5,2.5600000000000001,2.02,4,1.4399999999999999,2,2,4,4,3.4100000000000001,3,2.0299999999999998,2,5.1600000000000001,9,3,1.5,1.4399999999999999,2.2000000000000002,1.9199999999999999,1.5800000000000001,3,2.7200000000000002,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,5.9199999999999999,2,1.75],"type":"histogram","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="overlay-histogram" class="level3">
+<h3 class="anchored" data-anchor-id="overlay-histogram">Overlay Histogram</h3>
+<p>By default, the histograms for each category are stacked. To change this behavior, you can use the barmode parameter. For example, barmode=‘overlay’ will create an overlaid histogram:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>tip,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"histogram"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">opacity =</span> <span class="fl">0.6</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-246d7ae0f88cf695a145" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-246d7ae0f88cf695a145">{"x":{"visdat":{"4c382b6623a":["function () ","plotlyVisDat"]},"cur_data":"4c382b6623a","attrs":{"4c382b6623a":{"x":{},"opacity":0.59999999999999998,"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"yaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1.01,3.6099999999999999,5,3.02,1.6699999999999999,3.5,2.75,2.23,3,3,2.4500000000000002,3.0699999999999998,2.6000000000000001,5.2000000000000002,1.5,2.4700000000000002,1,3,3.1400000000000001,5,2.2000000000000002,1.8300000000000001,5.1699999999999999,1,4.2999999999999998,3.25,2.5,3,2.5,3.48,4.0800000000000001,4,1,4,3.5,1.5,1.8,2.9199999999999999,1.6799999999999999,2.52,4.2000000000000002,2,2,2.8300000000000001,1.5,2,3.25,1.25,2,2,2.75,3.5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,5.1399999999999997,3.75,2.6099999999999999,2,3,1.6100000000000001,2,4,3.5,3.5,4.1900000000000004,5,2,2.0099999999999998,2,2.5,3.23,2.23,2.5,6.5,1.1000000000000001,3.0899999999999999,3.48,3,2.5,2,2.8799999999999999,4.6699999999999999,2,3],"opacity":0.59999999999999998,"type":"histogram","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1.6599999999999999,3.5,3.3100000000000001,4.71,2,3.1200000000000001,1.96,3.23,1.71,1.5700000000000001,3,3.9199999999999999,3.71,3.3500000000000001,4.0800000000000001,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,1.45,2.5,3.27,3.6000000000000001,2,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.0099999999999998,2.0899999999999999,1.97,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,5,2.0299999999999998,2,4,5.8499999999999996,3,3,3.5,4.7300000000000004,4,1.5,3,1.5,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,3,4,2.5499999999999998,5.0700000000000003,2.3100000000000001,2.5,2,1.48,2.1800000000000002,1.5,2,6.7000000000000002,5,1.73,2,2.5,2,2.7400000000000002,2,2,5,2,3.5,2.5,2,3.48,2.2400000000000002,4.5,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,2,4,1.5,2.5600000000000001,2.02,4,1.4399999999999999,2,2,4,4,3.4100000000000001,3,2.0299999999999998,2,5.1600000000000001,9,3,1.5,1.4399999999999999,2.2000000000000002,1.9199999999999999,1.5800000000000001,3,2.7200000000000002,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,5.9199999999999999,2,1.75],"opacity":0.59999999999999998,"type":"histogram","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="violin-and-box-plots" class="level2">
+<h2 class="anchored" data-anchor-id="violin-and-box-plots">Violin and Box Plots</h2>
+<p>Violin plots are useful for comparing the distribution of a quantitative variable across different categories. They show the probability density of the data at different values and can include a box plot to summarize key statistics.</p>
+<p>First, let’s create a violin plot of all tips:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"violin"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">box =</span> <span class="fu">list</span>(<span class="at">visible =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-686aa2ba3a94a04e2ca0" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-686aa2ba3a94a04e2ca0">{"x":{"visdat":{"4c3856bbe20":["function () ","plotlyVisDat"]},"cur_data":"4c3856bbe20","attrs":{"4c3856bbe20":{"y":{},"box":{"visible":true},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"violin"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"yaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"xaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"fillcolor":"rgba(31,119,180,0.5)","y":[1.01,1.6599999999999999,3.5,3.3100000000000001,3.6099999999999999,4.71,2,3.1200000000000001,1.96,3.23,1.71,5,1.5700000000000001,3,3.02,3.9199999999999999,1.6699999999999999,3.71,3.5,3.3500000000000001,4.0800000000000001,2.75,2.23,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,3,1.45,2.5,3,2.4500000000000002,3.27,3.6000000000000001,2,3.0699999999999998,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,2.6000000000000001,5.2000000000000002,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.5,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.4700000000000002,1,2.0099999999999998,2.0899999999999999,1.97,3,3.1400000000000001,5,2.2000000000000002,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,1.8300000000000001,5,2.0299999999999998,5.1699999999999999,2,4,5.8499999999999996,3,3,3.5,1,4.2999999999999998,3.25,4.7300000000000004,4,1.5,3,1.5,2.5,3,2.5,3.48,4.0800000000000001,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,4,3,1,4,2.5499999999999998,4,3.5,5.0700000000000003,1.5,1.8,2.9199999999999999,2.3100000000000001,1.6799999999999999,2.5,2,2.52,4.2000000000000002,1.48,2,2,2.1800000000000002,1.5,2.8300000000000001,1.5,2,3.25,1.25,2,2,2,2.75,3.5,6.7000000000000002,5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,1.73,2,2.5,2,2.7400000000000002,2,2,5.1399999999999997,5,3.75,2.6099999999999999,2,3.5,2.5,2,2,3,3.48,2.2400000000000002,4.5,1.6100000000000001,2,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,4,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,3.5,2,3.5,4,1.5,4.1900000000000004,2.5600000000000001,2.02,4,1.4399999999999999,2,5,2,2,4,2.0099999999999998,2,2.5,4,3.23,3.4100000000000001,3,2.0299999999999998,2.23,2,5.1600000000000001,9,2.5,6.5,1.1000000000000001,3,1.5,1.4399999999999999,3.0899999999999999,2.2000000000000002,3.48,1.9199999999999999,3,1.5800000000000001,2.5,2,3,2.7200000000000002,2.8799999999999999,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,4.6699999999999999,5.9199999999999999,2,2,1.75,3],"box":{"visible":true},"type":"violin","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>We can add a box plot to the violin plot by setting the box parameter to True:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>sex,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"violin"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">box =</span> <span class="fu">list</span>(<span class="at">visible =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d6cb7d77d4d6879dfe04" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d6cb7d77d4d6879dfe04">{"x":{"visdat":{"4c381aa76a6c":["function () ","plotlyVisDat"]},"cur_data":"4c381aa76a6c","attrs":{"4c381aa76a6c":{"x":{},"y":{},"box":{"visible":true},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"violin"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"sex","type":"category","categoryorder":"array","categoryarray":["Female","Male"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"fillcolor":"rgba(102,194,165,0.5)","x":["Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female"],"y":[1.01,3.6099999999999999,5,3.02,1.6699999999999999,3.5,2.75,2.23,3,3,2.4500000000000002,3.0699999999999998,2.6000000000000001,5.2000000000000002,1.5,2.4700000000000002,1,3,3.1400000000000001,5,2.2000000000000002,1.8300000000000001,5.1699999999999999,1,4.2999999999999998,3.25,2.5,3,2.5,3.48,4.0800000000000001,4,1,4,3.5,1.5,1.8,2.9199999999999999,1.6799999999999999,2.52,4.2000000000000002,2,2,2.8300000000000001,1.5,2,3.25,1.25,2,2,2.75,3.5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,5.1399999999999997,3.75,2.6099999999999999,2,3,1.6100000000000001,2,4,3.5,3.5,4.1900000000000004,5,2,2.0099999999999998,2,2.5,3.23,2.23,2.5,6.5,1.1000000000000001,3.0899999999999999,3.48,3,2.5,2,2.8799999999999999,4.6699999999999999,2,3],"box":{"visible":true},"type":"violin","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(141,160,203,0.5)","x":["Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male"],"y":[1.6599999999999999,3.5,3.3100000000000001,4.71,2,3.1200000000000001,1.96,3.23,1.71,1.5700000000000001,3,3.9199999999999999,3.71,3.3500000000000001,4.0800000000000001,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,1.45,2.5,3.27,3.6000000000000001,2,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.0099999999999998,2.0899999999999999,1.97,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,5,2.0299999999999998,2,4,5.8499999999999996,3,3,3.5,4.7300000000000004,4,1.5,3,1.5,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,3,4,2.5499999999999998,5.0700000000000003,2.3100000000000001,2.5,2,1.48,2.1800000000000002,1.5,2,6.7000000000000002,5,1.73,2,2.5,2,2.7400000000000002,2,2,5,2,3.5,2.5,2,3.48,2.2400000000000002,4.5,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,2,4,1.5,2.5600000000000001,2.02,4,1.4399999999999999,2,2,4,4,3.4100000000000001,3,2.0299999999999998,2,5.1600000000000001,9,3,1.5,1.4399999999999999,2.2000000000000002,1.9199999999999999,1.5800000000000001,3,2.7200000000000002,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,5.9199999999999999,2,1.75],"box":{"visible":true},"type":"violin","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="box-plot" class="level3">
+<h3 class="anchored" data-anchor-id="box-plot">Box plot</h3>
+<p>For just the box plot, we do:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"box"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-190d0676cb3120c22f6e" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-190d0676cb3120c22f6e">{"x":{"visdat":{"4c383745273c":["function () ","plotlyVisDat"]},"cur_data":"4c383745273c","attrs":{"4c383745273c":{"y":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"box"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"yaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"xaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"fillcolor":"rgba(31,119,180,0.5)","y":[1.01,1.6599999999999999,3.5,3.3100000000000001,3.6099999999999999,4.71,2,3.1200000000000001,1.96,3.23,1.71,5,1.5700000000000001,3,3.02,3.9199999999999999,1.6699999999999999,3.71,3.5,3.3500000000000001,4.0800000000000001,2.75,2.23,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,3,1.45,2.5,3,2.4500000000000002,3.27,3.6000000000000001,2,3.0699999999999998,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,2.6000000000000001,5.2000000000000002,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.5,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.4700000000000002,1,2.0099999999999998,2.0899999999999999,1.97,3,3.1400000000000001,5,2.2000000000000002,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,1.8300000000000001,5,2.0299999999999998,5.1699999999999999,2,4,5.8499999999999996,3,3,3.5,1,4.2999999999999998,3.25,4.7300000000000004,4,1.5,3,1.5,2.5,3,2.5,3.48,4.0800000000000001,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,4,3,1,4,2.5499999999999998,4,3.5,5.0700000000000003,1.5,1.8,2.9199999999999999,2.3100000000000001,1.6799999999999999,2.5,2,2.52,4.2000000000000002,1.48,2,2,2.1800000000000002,1.5,2.8300000000000001,1.5,2,3.25,1.25,2,2,2,2.75,3.5,6.7000000000000002,5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,1.73,2,2.5,2,2.7400000000000002,2,2,5.1399999999999997,5,3.75,2.6099999999999999,2,3.5,2.5,2,2,3,3.48,2.2400000000000002,4.5,1.6100000000000001,2,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,4,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,3.5,2,3.5,4,1.5,4.1900000000000004,2.5600000000000001,2.02,4,1.4399999999999999,2,5,2,2,4,2.0099999999999998,2,2.5,4,3.23,3.4100000000000001,3,2.0299999999999998,2.23,2,5.1600000000000001,9,2.5,6.5,1.1000000000000001,3,1.5,1.4399999999999999,3.0899999999999999,2.2000000000000002,3.48,1.9199999999999999,3,1.5800000000000001,2.5,2,3,2.7200000000000002,2.8799999999999999,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,4.6699999999999999,5.9199999999999999,2,2,1.75,3],"type":"box","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="summary-bar-charts-mean-and-standard-deviation" class="level2">
+<h2 class="anchored" data-anchor-id="summary-bar-charts-mean-and-standard-deviation">Summary Bar Charts (Mean and Standard Deviation)</h2>
+<p>Sometimes it’s useful to display the mean and standard deviation of a quantitative variable across different categories. This can be visualized using a bar chart with error bars.</p>
+<p>First, let’s calculate the mean and standard deviation of tips for each gender. You have not yet learned how to do this, but you will in a later lesson.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean and standard deviation</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>summary_df <span class="ot">&lt;-</span> tips <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_tip =</span> <span class="fu">mean</span>(tip),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_tip =</span> <span class="fu">sd</span>(tip)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the bar chart</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  summary_df,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>sex,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>mean_tip,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"bar"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">error_y =</span> <span class="fu">list</span>(<span class="at">array =</span> summary_df<span class="sc">$</span>sd_tip)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-b28c7d17a97aac2c09a3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b28c7d17a97aac2c09a3">{"x":{"visdat":{"4c3828f83f74":["function () ","plotlyVisDat"]},"cur_data":"4c3828f83f74","attrs":{"4c3828f83f74":{"x":{},"y":{},"error_y":{"array":[1.1594945045210152,1.489101813842018]},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"sex","type":"category","categoryorder":"array","categoryarray":["Female","Male"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"mean_tip"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Female","Male"],"y":[2.8334482758620689,3.0896178343949043],"error_y":{"color":"rgba(31,119,180,1)","array":[1.1594945045210152,1.489101813842018]},"type":"bar","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>This bar chart displays the average tip amount for each gender, with error bars representing the standard deviation</p>
+</section>
+<section id="categorical-vs-categorical" class="level2">
+<h2 class="anchored" data-anchor-id="categorical-vs-categorical">Categorical vs Categorical</h2>
+<p>When both variables are categorical, bar charts with a color axis are effective for visualizing the frequency distribution across categories. We will focus on three types of bar charts: stacked bar charts, percent-stacked bar charts, and grouped/clustered bar charts.</p>
+<section id="stacked-bar-chart" class="level3">
+<h3 class="anchored" data-anchor-id="stacked-bar-chart">Stacked Bar Chart</h3>
+<p>Stacked bar charts show the total counts and the breakdown within each category. To make a stacked bar chart, use the color parameter to specify the categorical variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>day,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"histogram"</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-7692c6db49865180d2ea" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7692c6db49865180d2ea">{"x":{"visdat":{"4c383c4481b":["function () ","plotlyVisDat"]},"cur_data":"4c383c4481b","attrs":{"4c383c4481b":{"x":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"day","type":"category","categoryorder":"array","categoryarray":["Fri","Sat","Sun","Thur"]},"yaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Thur"],"type":"histogram","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat"],"type":"histogram","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="percent-stacked-bar-chart" class="level3">
+<h3 class="anchored">Percent Stacked Bar Chart</h3>
+<p>To show proportions instead of counts, we can create percent-stacked bar charts by setting the barnorm parameter to ‘percent’:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>day,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"histogram"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">barnorm =</span> <span class="st">"percent"</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d3769d25ceaeebc902de" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d3769d25ceaeebc902de">{"x":{"visdat":{"4c382377656e":["function () ","plotlyVisDat"]},"cur_data":"4c382377656e","attrs":{"4c382377656e":{"x":{},"barnorm":"percent","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"day","type":"category","categoryorder":"array","categoryarray":["Fri","Sat","Sun","Thur"]},"yaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Thur"],"barnorm":"percent","type":"histogram","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat"],"barnorm":"percent","type":"histogram","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practice
+</div>
+</div>
+<section id="practice-q-proportion-of-high-and-low-income-countries-by-continent" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="practice-q-proportion-of-high-and-low-income-countries-by-continent">Practice Q: Proportion of High and Low Income Countries by Continent</h2>
+<p>Again using the <em>g_2007_income</em> *dataset, create a percent-stacked bar chart showing the proportion of high and low income countries in each continent. Add text labels to the bars to show the exact percentages.</p>
+<p>According the plot, which continent has the highest proportion of high income countries? Are there any limitations to this plot?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</section>
+<section id="clustered-bar-chart" class="level3">
+<h3 class="anchored" data-anchor-id="clustered-bar-chart">Clustered Bar Chart</h3>
+<p>For clustered bar charts, set the barmode parameter to ‘group’ to place the bars for each category side by side:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>day,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"histogram"</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="at">barmode =</span> <span class="st">"group"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-3459e476b3db8a40c77a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3459e476b3db8a40c77a">{"x":{"visdat":{"4c387ac54bb0":["function () ","plotlyVisDat"]},"cur_data":"4c387ac54bb0","attrs":{"4c387ac54bb0":{"x":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"barmode":"group","xaxis":{"domain":[0,1],"automargin":true,"title":"day","type":"category","categoryorder":"array","categoryarray":["Fri","Sat","Sun","Thur"]},"yaxis":{"domain":[0,1],"automargin":true},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Thur"],"type":"histogram","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Fri","Fri","Fri","Fri","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sat","Sat","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Sun","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Thur","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Fri","Fri","Fri","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat","Sat"],"type":"histogram","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="time-series" class="level2">
+<h2 class="anchored" data-anchor-id="time-series">Time Series</h2>
+<p>Time series data represents observations collected at different points in time. It’s crucial for analyzing trends, patterns, and changes over time. Let’s explore some basic time series visualizations using Nigeria’s population data from the Gapminder dataset.</p>
+<p>First, let’s prepare our data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the data for Nigeria</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>nigeria_pop <span class="ot">&lt;-</span> gapminder <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"Nigeria"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, pop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="bar-chart" class="level3">
+<h3 class="anchored" data-anchor-id="bar-chart">Bar Chart</h3>
+<p>A bar chart can be used to plot time series data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  nigeria_pop,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>year,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>pop,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"bar"</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-fe124bdf453c297cadab" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fe124bdf453c297cadab">{"x":{"visdat":{"4c387046152e":["function () ","plotlyVisDat"]},"cur_data":"4c387046152e","attrs":{"4c387046152e":{"x":{},"y":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"pop"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[33119096,37173340,41871351,47287752,53740085,62209173,73039376,81551520,93364244,106207839,119901274,135031164],"type":"bar","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="line-chart" class="level3">
+<h3 class="anchored" data-anchor-id="line-chart">Line Chart</h3>
+<p>A line chart is excellent for showing continuous changes over time:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  nigeria_pop,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>year,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>pop,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"lines+markers"</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0763157ca77172f1ed90" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0763157ca77172f1ed90">{"x":{"visdat":{"4c38620b3b04":["function () ","plotlyVisDat"]},"cur_data":"4c38620b3b04","attrs":{"4c38620b3b04":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"pop"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[33119096,37173340,41871351,47287752,53740085,62209173,73039376,81551520,93364244,106207839,119901274,135031164],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="compare-nigeria-and-ghana" class="level3">
+<h3 class="anchored">Compare Nigeria and Ghana</h3>
+<p>We can also compare the population growth of multiple countries by adding a color parameter:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>nigeria_ghana <span class="ot">&lt;-</span> gapminder <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Nigeria"</span>, <span class="st">"Ghana"</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  nigeria_ghana,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>year,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>pop,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>country,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"lines+markers"</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-c8e57fb7a7f120494c7f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-c8e57fb7a7f120494c7f">{"x":{"visdat":{"4c383bbb2c1b":["function () ","plotlyVisDat"]},"cur_data":"4c383bbb2c1b","attrs":{"4c383bbb2c1b":{"x":{},"y":{},"mode":"lines+markers","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"pop"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[5581001,6391288,7355248,8490213,9354120,10538093,11400338,14168101,16278738,18418288,20550751,22873338],"mode":"lines+markers","type":"scatter","name":"Ghana","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[33119096,37173340,41871351,47287752,53740085,62209173,73039376,81551520,93364244,106207839,119901274,135031164],"mode":"lines+markers","type":"scatter","name":"Nigeria","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>This chart allows us to compare the population trends of Nigeria and Ghana over time.</p>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practice
+</div>
+</div>
+<section id="practice-q-gdp-per-capita-time-series" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="practice-q-gdp-per-capita-time-series">Practice Q: GDP per Capita Time Series</h2>
+<p>CUsing the Gapminder dataset, create a time series visualization for the GDP per capita of Iraq.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What happened to Iraq in the 1980s that might explain the graph shown?</p>
+</section>
+</div>
+</section>
+</section>
+<section id="plots-with-three-or-more-variables" class="level2">
+<h2 class="anchored" data-anchor-id="plots-with-three-or-more-variables">Plots with three or more variables</h2>
+<p>Although bivariate visualizations are the most common types of visualizations, plots with three or more variables are also sometimes useful. Let’s explore a few examples.</p>
+<section id="bubble-charts" class="level3">
+<h3 class="anchored" data-anchor-id="bubble-charts">Bubble Charts</h3>
+<p>Bubble charts show the relationship between three variables by mapping the size of the points to a third variable. Below, we plot the relationship between gdpPercap and lifeExp with the size of the points representing the population of the country.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  g_2007,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>gdpPercap,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>lifeExp,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="sc">~</span>pop,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>continent,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-56f2353242abdc00b4ec" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-56f2353242abdc00b4ec">{"x":{"visdat":{"4c383a8d2736":["function () ","plotlyVisDat"]},"cur_data":"4c383a8d2736","attrs":{"4c383a8d2736":{"x":{},"y":{},"mode":"markers","color":{},"size":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"gdpPercap"},"yaxis":{"domain":[0,1],"automargin":true,"title":"lifeExp"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[6223.3674650000003,4797.2312670000001,1441.2848730000001,12569.851769999999,1217.0329939999999,430.07069159999998,2042.0952400000001,706.01653699999997,1704.0637240000001,986.14787920000003,277.55185870000003,3632.5577979999998,1544.7501119999999,2082.4815669999998,5581.1809979999998,12154.089749999999,641.36952359999998,690.80557590000001,13206.48452,752.74972649999995,1327.6089099999999,942.6542111,579.23174300000005,1463.249282,1569.3314419999999,414.5073415,12057.49928,1044.7701259999999,759.34991009999999,1042.581557,1803.151496,10956.991120000001,3820.1752299999998,823.68562050000003,4811.0604290000001,619.67689240000004,2013.9773049999999,7670.122558,863.08846389999997,1598.4350890000001,1712.4721360000001,862.54075609999995,926.14106830000003,9269.6578079999999,2602.3949950000001,4513.4806429999999,1107.482182,882.96994380000001,7092.9230250000001,1056.3801209999999,1271.211593,469.70929810000001],"y":[72.301000000000002,42.731000000000002,56.728000000000002,50.728000000000002,52.295000000000002,49.579999999999998,50.43,44.741,50.651000000000003,65.152000000000001,46.462000000000003,55.322000000000003,48.328000000000003,54.790999999999997,71.337999999999994,51.579000000000001,58.039999999999999,52.947000000000003,56.734999999999999,59.448,60.021999999999998,56.006999999999998,46.387999999999998,54.109999999999999,42.591999999999999,45.677999999999997,73.951999999999998,59.442999999999998,48.302999999999997,54.466999999999999,64.164000000000001,72.801000000000002,71.164000000000001,42.082000000000001,52.905999999999999,56.866999999999997,46.859000000000002,76.441999999999993,46.241999999999997,65.528000000000006,63.061999999999998,42.567999999999998,48.158999999999999,49.338999999999999,58.555999999999997,39.613,52.517000000000003,58.420000000000002,73.923000000000002,51.542000000000002,42.384,43.487000000000002],"mode":"markers","type":"scatter","name":"Africa","marker":{"color":"rgba(102,194,165,1)","size":[12.261709980861292,10.83420135012579,10.537804334189488,10.098264163586052,10.964286730631915,10.559114566465983,11.194329879514148,10.28460826787871,10.685280102747011,10.034906989284721,14.396449500703163,10.245807236739237,11.215976293467763,10.020259297636711,15.465253578896277,10.024001801760864,10.321301354577344,15.209096383417283,10.085686258905275,10.101624478631992,11.547716208575098,10.665416851017032,10.086858560250018,12.417135882935728,10.123760591540258,10.204395934060054,10.398457882276279,11.294765333042839,10.896086287592171,10.807669892167487,10.209592108234144,10.071762194051001,12.290649523531359,11.348281496946464,10.126656941741654,10.866583256649086,19.203636218077953,10.040854776950541,10.591202544400106,10,10.823758693981459,10.405805960485132,10.608826314208674,12.989678944920779,12.873302131694377,10.063720045731904,12.589797631880444,10.375567835028157,10.68782969093424,11.977555029229842,10.788163846268242,10.826738253414206],"sizemode":"area","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":[12.261709980861292,10.83420135012579,10.537804334189488,10.098264163586052,10.964286730631915,10.559114566465983,11.194329879514148,10.28460826787871,10.685280102747011,10.034906989284721,14.396449500703163,10.245807236739237,11.215976293467763,10.020259297636711,15.465253578896277,10.024001801760864,10.321301354577344,15.209096383417283,10.085686258905275,10.101624478631992,11.547716208575098,10.665416851017032,10.086858560250018,12.417135882935728,10.123760591540258,10.204395934060054,10.398457882276279,11.294765333042839,10.896086287592171,10.807669892167487,10.209592108234144,10.071762194051001,12.290649523531359,11.348281496946464,10.126656941741654,10.866583256649086,19.203636218077953,10.040854776950541,10.591202544400106,10,10.823758693981459,10.405805960485132,10.608826314208674,12.989678944920779,12.873302131694377,10.063720045731904,12.589797631880444,10.375567835028157,10.68782969093424,11.977555029229842,10.788163846268242,10.826738253414206]},"error_y":{"color":"rgba(102,194,165,1)","width":[]},"error_x":{"color":"rgba(102,194,165,1)","width":[]},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[12779.379639999999,3822.137084,9065.8008250000003,36319.235009999997,13171.638849999999,7006.5804189999999,9645.06142,8948.1029230000004,6025.3747519999997,6873.262326,5728.3535140000004,5186.0500030000003,1201.637154,3548.3308459999998,7320.8802619999997,11977.57496,2749.3209649999999,9809.1856360000002,4172.8384640000004,7408.9055609999996,19328.709009999999,18008.509239999999,42951.65309,10611.46299,11415.805689999999],"y":[75.319999999999993,65.554000000000002,72.390000000000001,80.653000000000006,78.552999999999997,72.888999999999996,78.781999999999996,78.272999999999996,72.234999999999999,74.994,71.878,70.259,60.915999999999997,70.197999999999993,72.566999999999993,76.194999999999993,72.899000000000001,75.537000000000006,71.751999999999995,71.421000000000006,78.745999999999995,69.819000000000003,78.242000000000004,76.384,73.747],"mode":"markers","type":"scatter","name":"Americas","marker":{"color":"rgba(252,141,98,1)","size":[12.73739585930675,10.608852184839259,22.956548868255592,12.265595694966887,11.097977002620352,13.005359823546433,10.26855659963476,10.765702951142771,10.622536314953416,10.925342694291718,10.460081451287495,10.844607760083207,10.566780805648857,10.497220140826379,10.176149164555692,17.406325489922679,10.373777846780621,10.207688193647703,10.441477737487711,11.943722456107125,10.255492067710088,10.058501004377744,30.542261447171356,10.221703590701772,11.766921952350808],"sizemode":"area","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":[12.73739585930675,10.608852184839259,22.956548868255592,12.265595694966887,11.097977002620352,13.005359823546433,10.26855659963476,10.765702951142771,10.622536314953416,10.925342694291718,10.460081451287495,10.844607760083207,10.566780805648857,10.497220140826379,10.176149164555692,17.406325489922679,10.373777846780621,10.207688193647703,10.441477737487711,11.943722456107125,10.255492067710088,10.058501004377744,30.542261447171356,10.221703590701772,11.766921952350808]},"error_y":{"color":"rgba(252,141,98,1)","width":[]},"error_x":{"color":"rgba(252,141,98,1)","width":[]},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[974.58033839999996,29796.048340000001,1391.253792,1713.7786860000001,4959.1148540000004,39724.978669999997,2452.210407,3540.6515639999998,11605.71449,4471.0619059999999,25523.277099999999,31656.068060000001,4519.4611709999999,1593.06548,23348.139729999999,47306.989780000004,10461.05868,12451.6558,3095.7722709999998,944,1091.359778,22316.192869999999,2605.94758,3190.4810160000002,21654.83194,47143.179640000002,3970.0954069999998,4184.5480889999999,28718.276839999999,7458.3963270000004,2441.5764039999999,3025.3497980000002,2280.769906],"y":[43.828000000000003,75.635000000000005,64.061999999999998,59.722999999999999,72.960999999999999,82.207999999999998,64.697999999999993,70.650000000000006,70.963999999999999,59.545000000000002,80.745000000000005,82.602999999999994,72.534999999999997,67.296999999999997,78.623000000000005,77.587999999999994,71.992999999999995,74.241,66.802999999999997,62.069000000000003,63.784999999999997,75.640000000000001,65.483000000000004,71.688000000000002,72.777000000000001,79.971999999999994,72.396000000000001,74.143000000000001,78.400000000000006,70.616,74.248999999999995,73.421999999999997,62.698],"mode":"markers","type":"scatter","name":"Asia","marker":{"color":"rgba(141,160,203,1)","size":[12.163190455721109,10.034744052094206,20.256016268423323,10.95102069448169,100,10.462861281260901,85.782295638664394,25.24574833952968,14.727293977995176,11.863508552302971,10.425063334333666,18.687370924486117,10.399569090707107,11.576958007583496,13.334185777310708,10.157406745950242,10.254044063259988,11.680683604632428,10.182565285721353,13.246620860107424,11.959219782950081,10.205143724978399,21.540829463399351,16.203334068680661,11.870430140538495,10.297166172309456,11.377400154483691,11.304805936379408,11.568259537066325,14.42794409237958,15.806405488799145,10.260668992496779,11.502555575747861],"sizemode":"area","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":[12.163190455721109,10.034744052094206,20.256016268423323,10.95102069448169,100,10.462861281260901,85.782295638664394,25.24574833952968,14.727293977995176,11.863508552302971,10.425063334333666,18.687370924486117,10.399569090707107,11.576958007583496,13.334185777310708,10.157406745950242,10.254044063259988,11.680683604632428,10.182565285721353,13.246620860107424,11.959219782950081,10.205143724978399,21.540829463399351,16.203334068680661,11.870430140538495,10.297166172309456,11.377400154483691,11.304805936379408,11.568259537066325,14.42794409237958,15.806405488799145,10.260668992496779,11.502555575747861]},"error_y":{"color":"rgba(141,160,203,1)","width":[]},"error_x":{"color":"rgba(141,160,203,1)","width":[]},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[5937.0295260000003,36126.492700000003,33692.605080000001,7446.2988029999997,10680.792820000001,14619.22272,22833.308509999999,35278.418740000001,33207.0844,30470.0167,32170.37442,27538.41188,18008.944439999999,36180.789190000003,40675.996350000001,28569.719700000001,9253.896111,36797.933319999996,49357.190170000002,15389.92468,20509.64777,10808.47561,9786.5347139999994,18678.314350000001,25768.257590000001,28821.063699999999,33859.748350000002,37506.419070000004,8458.2763840000007,33203.261279999999],"y":[76.423000000000002,79.828999999999994,79.441000000000003,74.852000000000004,73.004999999999995,75.748000000000005,76.486000000000004,78.331999999999994,79.313000000000002,80.656999999999996,79.406000000000006,79.483000000000004,73.337999999999994,81.757000000000005,78.885000000000005,80.546000000000006,74.543000000000006,79.762,80.195999999999998,75.563000000000002,78.097999999999999,72.475999999999999,74.001999999999995,74.662999999999997,77.926000000000002,80.941000000000003,80.884,81.700999999999993,71.777000000000001,79.424999999999997],"mode":"markers","type":"scatter","name":"Europe","marker":{"color":"rgba(231,138,195,1)","size":[10.232149250296619,10.546095837161687,10.695752520355549,10.297110813255619,10.486236727068617,10.29309124082133,10.684593199961862,10.359631867889327,10.343955221398494,14.15597939553157,15.611088371308021,10.717190604059709,10.665983001439372,10.006986571983061,10.266863882227813,13.955554842177067,10.033116932776945,11.117490693666365,10.302280024635301,12.615641026629536,10.712859218853625,11.506945596499255,10.679236204664665,10.358224478281437,10.12352823368667,12.747379874905178,10.602840915151161,10.502059655251648,14.843682941544124,14.134977221713724],"sizemode":"area","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)","size":[10.232149250296619,10.546095837161687,10.695752520355549,10.297110813255619,10.486236727068617,10.29309124082133,10.684593199961862,10.359631867889327,10.343955221398494,14.15597939553157,15.611088371308021,10.717190604059709,10.665983001439372,10.006986571983061,10.266863882227813,13.955554842177067,10.033116932776945,11.117490693666365,10.302280024635301,12.615641026629536,10.712859218853625,11.506945596499255,10.679236204664665,10.358224478281437,10.12352823368667,12.747379874905178,10.602840915151161,10.502059655251648,14.843682941544124,14.134977221713724]},"error_y":{"color":"rgba(231,138,195,1)","width":[]},"error_x":{"color":"rgba(231,138,195,1)","width":[]},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[34435.367440000002,25185.009109999999],"y":[81.234999999999999,80.203999999999994],"mode":"markers","type":"scatter","name":"Oceania","marker":{"color":"rgba(166,216,84,1)","size":[11.381218427473144,10.267320201925589],"sizemode":"area","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)","size":[11.381218427473144,10.267320201925589]},"error_y":{"color":"rgba(166,216,84,1)","width":[]},"error_x":{"color":"rgba(166,216,84,1)","width":[]},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>We can easily spot the largest countries by population, such as China, India, and the United States. We can also add a color axis to differentiate between continents:</p>
+</section>
+</section>
+<section id="tips-bubble-chart" class="level2">
+<h2 class="anchored" data-anchor-id="tips-bubble-chart">Tips Bubble Chart</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>total_bill,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="sc">~</span>size,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>day,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Tips vs Total Bill by Party Size and Day"</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-04786ee1e03ddfe01a8f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-04786ee1e03ddfe01a8f">{"x":{"visdat":{"4c3829e44e76":["function () ","plotlyVisDat"]},"cur_data":"4c3829e44e76","attrs":{"4c3829e44e76":{"x":{},"y":{},"mode":"markers","color":{},"size":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Tips vs Total Bill by Party Size and Day","xaxis":{"domain":[0,1],"automargin":true,"title":"total_bill"},"yaxis":{"domain":[0,1],"automargin":true,"title":"tip"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[28.969999999999999,22.489999999999998,5.75,16.32,22.75,40.170000000000002,27.280000000000001,12.029999999999999,21.010000000000002,12.460000000000001,11.35,15.380000000000001,12.16,13.42,8.5800000000000001,15.98,13.42,16.27,10.09],"y":[3,3.5,1,4.2999999999999998,3.25,4.7300000000000004,4,1.5,3,1.5,2.5,3,2.2000000000000002,3.48,1.9199999999999999,3,1.5800000000000001,2.5,2],"mode":"markers","type":"scatter","name":"Fri","marker":{"color":"rgba(102,194,165,1)","size":[28,28,28,28,28,64,28,28,28,28,28,28,28,28,10,46,28,28,28],"sizemode":"area","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":[28,28,28,28,28,64,28,28,28,28,28,28,28,28,10,46,28,28,28]},"error_y":{"color":"rgba(102,194,165,1)","width":[]},"error_x":{"color":"rgba(102,194,165,1)","width":[]},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[20.649999999999999,17.920000000000002,20.289999999999999,15.77,39.420000000000002,19.82,17.809999999999999,13.369999999999999,12.69,21.699999999999999,19.649999999999999,9.5500000000000007,18.350000000000001,15.06,20.690000000000001,17.780000000000001,24.059999999999999,16.309999999999999,16.93,18.690000000000001,31.27,16.039999999999999,38.009999999999998,26.41,11.24,48.270000000000003,20.289999999999999,13.81,11.02,18.289999999999999,17.59,20.079999999999998,16.449999999999999,3.0699999999999998,20.23,15.01,12.02,17.07,26.859999999999999,25.280000000000001,14.73,10.51,17.920000000000002,44.299999999999997,22.420000000000002,20.920000000000002,15.359999999999999,20.489999999999998,25.210000000000001,18.239999999999998,14.31,14,7.25,10.59,10.630000000000001,50.810000000000002,15.81,26.59,38.729999999999997,24.27,12.76,30.059999999999999,25.890000000000001,48.329999999999998,13.27,28.170000000000002,12.9,28.149999999999999,11.59,7.7400000000000002,30.140000000000001,20.449999999999999,13.279999999999999,22.120000000000001,24.010000000000002,15.69,11.609999999999999,10.77,15.529999999999999,10.07,12.6,32.829999999999998,35.829999999999998,29.030000000000001,27.18,22.670000000000002,17.82],"y":[3.3500000000000001,4.0800000000000001,2.75,2.23,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,3,1.45,2.5,3,2.4500000000000002,3.27,3.6000000000000001,2,3.0699999999999998,2.3100000000000001,5,2.2400000000000002,3,1.5,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.4700000000000002,1,2.0099999999999998,2.0899999999999999,1.97,3,3.1400000000000001,5,2.2000000000000002,1.25,3.0800000000000001,2.5,3.48,4.0800000000000001,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,4,3,1,1.6100000000000001,2,10,3.1600000000000001,3.4100000000000001,3,2.0299999999999998,2.23,2,5.1600000000000001,9,2.5,6.5,1.1000000000000001,3,1.5,1.4399999999999999,3.0899999999999999,3,2.7200000000000002,2.8799999999999999,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,4.6699999999999999,5.9199999999999999,2,2,1.75],"mode":"markers","type":"scatter","name":"Sat","marker":{"color":"rgba(252,141,98,1)","size":[46,28,28,28,64,28,64,28,28,28,28,28,64,28,64,28,46,46,46,46,46,46,64,28,28,64,28,28,28,64,46,46,28,10,28,28,28,46,28,28,28,28,28,46,28,28,28,28,28,28,28,28,10,28,28,46,28,46,64,28,28,46,64,64,28,46,28,82,28,28,64,64,28,28,64,46,28,28,28,28,28,28,46,46,28,28,28],"sizemode":"area","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":[46,28,28,28,64,28,64,28,28,28,28,28,64,28,64,28,46,46,46,46,46,46,64,28,28,64,28,28,28,64,46,46,28,10,28,28,28,46,28,28,28,28,28,46,28,28,28,28,28,28,28,28,10,28,28,46,28,46,64,28,28,46,64,64,28,46,28,82,28,28,64,64,28,28,64,46,28,28,28,28,28,28,46,46,28,28,28]},"error_y":{"color":"rgba(252,141,98,1)","width":[]},"error_x":{"color":"rgba(252,141,98,1)","width":[]},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[16.989999999999998,10.34,21.010000000000002,23.68,24.59,25.289999999999999,8.7699999999999996,26.879999999999999,15.039999999999999,14.779999999999999,10.27,35.259999999999998,15.42,18.43,14.83,21.579999999999998,10.33,16.289999999999999,16.969999999999999,17.460000000000001,13.94,9.6799999999999997,30.399999999999999,18.289999999999999,22.23,32.399999999999999,28.550000000000001,18.039999999999999,12.539999999999999,10.289999999999999,34.810000000000002,9.9399999999999995,25.559999999999999,19.489999999999998,38.07,23.949999999999999,25.710000000000001,17.309999999999999,29.93,14.07,13.130000000000001,17.260000000000002,24.550000000000001,19.77,29.850000000000001,48.170000000000002,25,13.390000000000001,16.489999999999998,21.5,12.66,16.210000000000001,13.81,17.510000000000002,24.52,20.760000000000002,31.710000000000001,7.25,31.850000000000001,16.82,32.899999999999999,17.890000000000001,14.48,9.5999999999999996,34.630000000000003,34.649999999999999,23.329999999999998,45.350000000000001,23.170000000000002,40.549999999999997,20.690000000000001,20.899999999999999,30.460000000000001,18.149999999999999,23.100000000000001,15.69],"y":[1.01,1.6599999999999999,3.5,3.3100000000000001,3.6099999999999999,4.71,2,3.1200000000000001,1.96,3.23,1.71,5,1.5700000000000001,3,3.02,3.9199999999999999,1.6699999999999999,3.71,3.5,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,2.6000000000000001,5.2000000000000002,1.5600000000000001,4.3399999999999999,3.5099999999999998,4,2.5499999999999998,4,3.5,5.0700000000000003,2.5,2,2.7400000000000002,2,2,5.1399999999999997,5,3.75,2.6099999999999999,2,3.5,2.5,2,2,3,3.48,2.2400000000000002,4.5,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,4,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,3.5,2,3.5,4,1.5],"mode":"markers","type":"scatter","name":"Sun","marker":{"color":"rgba(141,160,203,1)","size":[28,46,46,28,64,64,28,64,28,28,28,64,28,64,28,28,46,46,46,28,28,28,64,28,28,64,46,28,28,28,64,28,64,28,46,28,46,28,64,28,28,46,64,64,82,100,64,28,64,64,28,46,28,28,46,28,64,28,28,28,28,28,28,28,28,64,28,46,64,28,82,46,82,46,46,28],"sizemode":"area","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":[28,46,46,28,64,64,28,64,28,28,28,64,28,64,28,28,46,46,46,28,28,28,64,28,28,64,46,28,28,28,64,28,64,28,46,28,46,28,64,28,28,46,64,64,82,100,64,28,64,64,28,46,28,28,46,28,64,28,28,28,28,28,28,28,28,64,28,46,64,28,82,46,82,46,46,28]},"error_y":{"color":"rgba(141,160,203,1)","width":[]},"error_x":{"color":"rgba(141,160,203,1)","width":[]},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[27.199999999999999,22.760000000000002,17.289999999999999,19.440000000000001,16.66,10.07,32.68,15.98,34.829999999999998,13.029999999999999,18.280000000000001,24.710000000000001,21.16,10.65,12.43,24.079999999999998,11.69,13.42,14.26,15.949999999999999,12.48,29.800000000000001,8.5199999999999996,14.52,11.380000000000001,22.82,19.079999999999998,20.27,11.17,12.26,18.260000000000002,8.5099999999999998,10.33,14.15,16,13.16,17.469999999999999,34.299999999999997,41.189999999999998,27.050000000000001,16.43,8.3499999999999996,18.640000000000001,11.869999999999999,9.7799999999999994,7.5099999999999998,19.809999999999999,28.440000000000001,15.48,16.579999999999998,7.5599999999999996,10.34,43.109999999999999,13,13.51,18.710000000000001,12.74,13,16.399999999999999,20.530000000000001,16.469999999999999,18.780000000000001],"y":[4,3,2.71,3,3.3999999999999999,1.8300000000000001,5,2.0299999999999998,5.1699999999999999,2,4,5.8499999999999996,3,1.5,1.8,2.9199999999999999,2.3100000000000001,1.6799999999999999,2.5,2,2.52,4.2000000000000002,1.48,2,2,2.1800000000000002,1.5,2.8300000000000001,1.5,2,3.25,1.25,2,2,2,2.75,3.5,6.7000000000000002,5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,1.73,2,4.1900000000000004,2.5600000000000001,2.02,4,1.4399999999999999,2,5,2,2,4,2.0099999999999998,2,2.5,4,3.23,3],"mode":"markers","type":"scatter","name":"Thur","marker":{"color":"rgba(231,138,195,1)","size":[64,28,28,28,28,10,28,28,64,28,28,28,28,28,28,64,28,28,28,28,28,100,28,28,28,46,28,28,28,28,28,28,28,28,28,28,28,100,82,100,28,28,46,28,28,28,28,28,28,28,28,28,64,28,28,46,28,28,28,64,46,28],"sizemode":"area","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)","size":[64,28,28,28,28,10,28,28,64,28,28,28,28,28,28,64,28,28,28,28,28,100,28,28,28,46,28,28,28,28,28,28,28,28,28,28,28,100,82,100,28,28,46,28,28,28,28,28,28,28,28,28,64,28,28,46,28,28,28,64,46,28]},"error_y":{"color":"rgba(231,138,195,1)","width":[]},"error_x":{"color":"rgba(231,138,195,1)","width":[]},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Now we have four different variables being plotted:</p>
+<p>-gdpPercap on the x-axis -lifeExp on the y-axis -pop as the size of the points -continent as the color of the points</p>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practice
+</div>
+</div>
+<section id="practice-q-tips-bubble-chart" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="practice-q-tips-bubble-chart">Practice Q: Tips Bubble Chart</h2>
+<p>Using the <em>tips</em> dataset, create a bubble chart showing the relationship between <em>total_bill</em> and <em>tip</em> with the <em>size</em> of the points representing the size of the party, and the color representing the <em>day</em> of the week.</p>
+<p>Use the plot to answer the question:</p>
+<p>-The highest two tip amounts were on which days and what was the table size?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tips)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  total_bill  tip    sex smoker day   time size
+1      16.99 1.01 Female     No Sun Dinner    2
+2      10.34 1.66   Male     No Sun Dinner    3
+3      21.01 3.50   Male     No Sun Dinner    3
+4      23.68 3.31   Male     No Sun Dinner    2
+5      24.59 3.61 Female     No Sun Dinner    4
+6      25.29 4.71   Male     No Sun Dinner    4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</section>
+<section id="facet-plots" class="level2">
+<h2 class="anchored" data-anchor-id="facet-plots">Facet Plots</h2>
+<p>Faceting splits a single plot into multiple plots, with each plot showing a different subset of the data. This is useful for comparing distributions across subsets.</p>
+<p>For example, we can facet the bubble chart by continent:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  g_2007,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>gdpPercap,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>lifeExp,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="sc">~</span>pop,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>continent,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"markers"</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">subplot</span>(</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(g_2007, g_2007<span class="sc">$</span>continent)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-9193d19796a82e67b636" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9193d19796a82e67b636">{"x":{"data":[{"x":[6223.3674650000003,4797.2312670000001,1441.2848730000001,12569.851769999999,1217.0329939999999,430.07069159999998,2042.0952400000001,706.01653699999997,1704.0637240000001,986.14787920000003,277.55185870000003,3632.5577979999998,1544.7501119999999,2082.4815669999998,5581.1809979999998,12154.089749999999,641.36952359999998,690.80557590000001,13206.48452,752.74972649999995,1327.6089099999999,942.6542111,579.23174300000005,1463.249282,1569.3314419999999,414.5073415,12057.49928,1044.7701259999999,759.34991009999999,1042.581557,1803.151496,10956.991120000001,3820.1752299999998,823.68562050000003,4811.0604290000001,619.67689240000004,2013.9773049999999,7670.122558,863.08846389999997,1598.4350890000001,1712.4721360000001,862.54075609999995,926.14106830000003,9269.6578079999999,2602.3949950000001,4513.4806429999999,1107.482182,882.96994380000001,7092.9230250000001,1056.3801209999999,1271.211593,469.70929810000001],"y":[72.301000000000002,42.731000000000002,56.728000000000002,50.728000000000002,52.295000000000002,49.579999999999998,50.43,44.741,50.651000000000003,65.152000000000001,46.462000000000003,55.322000000000003,48.328000000000003,54.790999999999997,71.337999999999994,51.579000000000001,58.039999999999999,52.947000000000003,56.734999999999999,59.448,60.021999999999998,56.006999999999998,46.387999999999998,54.109999999999999,42.591999999999999,45.677999999999997,73.951999999999998,59.442999999999998,48.302999999999997,54.466999999999999,64.164000000000001,72.801000000000002,71.164000000000001,42.082000000000001,52.905999999999999,56.866999999999997,46.859000000000002,76.441999999999993,46.241999999999997,65.528000000000006,63.061999999999998,42.567999999999998,48.158999999999999,49.338999999999999,58.555999999999997,39.613,52.517000000000003,58.420000000000002,73.923000000000002,51.542000000000002,42.384,43.487000000000002],"mode":"markers","type":"scatter","name":"Africa","marker":{"color":"rgba(102,194,165,1)","size":[12.261709980861292,10.83420135012579,10.537804334189488,10.098264163586052,10.964286730631915,10.559114566465983,11.194329879514148,10.28460826787871,10.685280102747011,10.034906989284721,14.396449500703163,10.245807236739237,11.215976293467763,10.020259297636711,15.465253578896277,10.024001801760864,10.321301354577344,15.209096383417283,10.085686258905275,10.101624478631992,11.547716208575098,10.665416851017032,10.086858560250018,12.417135882935728,10.123760591540258,10.204395934060054,10.398457882276279,11.294765333042839,10.896086287592171,10.807669892167487,10.209592108234144,10.071762194051001,12.290649523531359,11.348281496946464,10.126656941741654,10.866583256649086,19.203636218077953,10.040854776950541,10.591202544400106,10,10.823758693981459,10.405805960485132,10.608826314208674,12.989678944920779,12.873302131694377,10.063720045731904,12.589797631880444,10.375567835028157,10.68782969093424,11.977555029229842,10.788163846268242,10.826738253414206],"sizemode":"area","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":[12.261709980861292,10.83420135012579,10.537804334189488,10.098264163586052,10.964286730631915,10.559114566465983,11.194329879514148,10.28460826787871,10.685280102747011,10.034906989284721,14.396449500703163,10.245807236739237,11.215976293467763,10.020259297636711,15.465253578896277,10.024001801760864,10.321301354577344,15.209096383417283,10.085686258905275,10.101624478631992,11.547716208575098,10.665416851017032,10.086858560250018,12.417135882935728,10.123760591540258,10.204395934060054,10.398457882276279,11.294765333042839,10.896086287592171,10.807669892167487,10.209592108234144,10.071762194051001,12.290649523531359,11.348281496946464,10.126656941741654,10.866583256649086,19.203636218077953,10.040854776950541,10.591202544400106,10,10.823758693981459,10.405805960485132,10.608826314208674,12.989678944920779,12.873302131694377,10.063720045731904,12.589797631880444,10.375567835028157,10.68782969093424,11.977555029229842,10.788163846268242,10.826738253414206]},"error_y":{"color":"rgba(102,194,165,1)","width":[]},"error_x":{"color":"rgba(102,194,165,1)","width":[]},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[12779.379639999999,3822.137084,9065.8008250000003,36319.235009999997,13171.638849999999,7006.5804189999999,9645.06142,8948.1029230000004,6025.3747519999997,6873.262326,5728.3535140000004,5186.0500030000003,1201.637154,3548.3308459999998,7320.8802619999997,11977.57496,2749.3209649999999,9809.1856360000002,4172.8384640000004,7408.9055609999996,19328.709009999999,18008.509239999999,42951.65309,10611.46299,11415.805689999999],"y":[75.319999999999993,65.554000000000002,72.390000000000001,80.653000000000006,78.552999999999997,72.888999999999996,78.781999999999996,78.272999999999996,72.234999999999999,74.994,71.878,70.259,60.915999999999997,70.197999999999993,72.566999999999993,76.194999999999993,72.899000000000001,75.537000000000006,71.751999999999995,71.421000000000006,78.745999999999995,69.819000000000003,78.242000000000004,76.384,73.747],"mode":"markers","type":"scatter","name":"Americas","marker":{"color":"rgba(252,141,98,1)","size":[12.73739585930675,10.608852184839259,22.956548868255592,12.265595694966887,11.097977002620352,13.005359823546433,10.26855659963476,10.765702951142771,10.622536314953416,10.925342694291718,10.460081451287495,10.844607760083207,10.566780805648857,10.497220140826379,10.176149164555692,17.406325489922679,10.373777846780621,10.207688193647703,10.441477737487711,11.943722456107125,10.255492067710088,10.058501004377744,30.542261447171356,10.221703590701772,11.766921952350808],"sizemode":"area","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":[12.73739585930675,10.608852184839259,22.956548868255592,12.265595694966887,11.097977002620352,13.005359823546433,10.26855659963476,10.765702951142771,10.622536314953416,10.925342694291718,10.460081451287495,10.844607760083207,10.566780805648857,10.497220140826379,10.176149164555692,17.406325489922679,10.373777846780621,10.207688193647703,10.441477737487711,11.943722456107125,10.255492067710088,10.058501004377744,30.542261447171356,10.221703590701772,11.766921952350808]},"error_y":{"color":"rgba(252,141,98,1)","width":[]},"error_x":{"color":"rgba(252,141,98,1)","width":[]},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[974.58033839999996,29796.048340000001,1391.253792,1713.7786860000001,4959.1148540000004,39724.978669999997,2452.210407,3540.6515639999998,11605.71449,4471.0619059999999,25523.277099999999,31656.068060000001,4519.4611709999999,1593.06548,23348.139729999999,47306.989780000004,10461.05868,12451.6558,3095.7722709999998,944,1091.359778,22316.192869999999,2605.94758,3190.4810160000002,21654.83194,47143.179640000002,3970.0954069999998,4184.5480889999999,28718.276839999999,7458.3963270000004,2441.5764039999999,3025.3497980000002,2280.769906],"y":[43.828000000000003,75.635000000000005,64.061999999999998,59.722999999999999,72.960999999999999,82.207999999999998,64.697999999999993,70.650000000000006,70.963999999999999,59.545000000000002,80.745000000000005,82.602999999999994,72.534999999999997,67.296999999999997,78.623000000000005,77.587999999999994,71.992999999999995,74.241,66.802999999999997,62.069000000000003,63.784999999999997,75.640000000000001,65.483000000000004,71.688000000000002,72.777000000000001,79.971999999999994,72.396000000000001,74.143000000000001,78.400000000000006,70.616,74.248999999999995,73.421999999999997,62.698],"mode":"markers","type":"scatter","name":"Asia","marker":{"color":"rgba(141,160,203,1)","size":[12.163190455721109,10.034744052094206,20.256016268423323,10.95102069448169,100,10.462861281260901,85.782295638664394,25.24574833952968,14.727293977995176,11.863508552302971,10.425063334333666,18.687370924486117,10.399569090707107,11.576958007583496,13.334185777310708,10.157406745950242,10.254044063259988,11.680683604632428,10.182565285721353,13.246620860107424,11.959219782950081,10.205143724978399,21.540829463399351,16.203334068680661,11.870430140538495,10.297166172309456,11.377400154483691,11.304805936379408,11.568259537066325,14.42794409237958,15.806405488799145,10.260668992496779,11.502555575747861],"sizemode":"area","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":[12.163190455721109,10.034744052094206,20.256016268423323,10.95102069448169,100,10.462861281260901,85.782295638664394,25.24574833952968,14.727293977995176,11.863508552302971,10.425063334333666,18.687370924486117,10.399569090707107,11.576958007583496,13.334185777310708,10.157406745950242,10.254044063259988,11.680683604632428,10.182565285721353,13.246620860107424,11.959219782950081,10.205143724978399,21.540829463399351,16.203334068680661,11.870430140538495,10.297166172309456,11.377400154483691,11.304805936379408,11.568259537066325,14.42794409237958,15.806405488799145,10.260668992496779,11.502555575747861]},"error_y":{"color":"rgba(141,160,203,1)","width":[]},"error_x":{"color":"rgba(141,160,203,1)","width":[]},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[5937.0295260000003,36126.492700000003,33692.605080000001,7446.2988029999997,10680.792820000001,14619.22272,22833.308509999999,35278.418740000001,33207.0844,30470.0167,32170.37442,27538.41188,18008.944439999999,36180.789190000003,40675.996350000001,28569.719700000001,9253.896111,36797.933319999996,49357.190170000002,15389.92468,20509.64777,10808.47561,9786.5347139999994,18678.314350000001,25768.257590000001,28821.063699999999,33859.748350000002,37506.419070000004,8458.2763840000007,33203.261279999999],"y":[76.423000000000002,79.828999999999994,79.441000000000003,74.852000000000004,73.004999999999995,75.748000000000005,76.486000000000004,78.331999999999994,79.313000000000002,80.656999999999996,79.406000000000006,79.483000000000004,73.337999999999994,81.757000000000005,78.885000000000005,80.546000000000006,74.543000000000006,79.762,80.195999999999998,75.563000000000002,78.097999999999999,72.475999999999999,74.001999999999995,74.662999999999997,77.926000000000002,80.941000000000003,80.884,81.700999999999993,71.777000000000001,79.424999999999997],"mode":"markers","type":"scatter","name":"Europe","marker":{"color":"rgba(231,138,195,1)","size":[10.232149250296619,10.546095837161687,10.695752520355549,10.297110813255619,10.486236727068617,10.29309124082133,10.684593199961862,10.359631867889327,10.343955221398494,14.15597939553157,15.611088371308021,10.717190604059709,10.665983001439372,10.006986571983061,10.266863882227813,13.955554842177067,10.033116932776945,11.117490693666365,10.302280024635301,12.615641026629536,10.712859218853625,11.506945596499255,10.679236204664665,10.358224478281437,10.12352823368667,12.747379874905178,10.602840915151161,10.502059655251648,14.843682941544124,14.134977221713724],"sizemode":"area","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)","size":[10.232149250296619,10.546095837161687,10.695752520355549,10.297110813255619,10.486236727068617,10.29309124082133,10.684593199961862,10.359631867889327,10.343955221398494,14.15597939553157,15.611088371308021,10.717190604059709,10.665983001439372,10.006986571983061,10.266863882227813,13.955554842177067,10.033116932776945,11.117490693666365,10.302280024635301,12.615641026629536,10.712859218853625,11.506945596499255,10.679236204664665,10.358224478281437,10.12352823368667,12.747379874905178,10.602840915151161,10.502059655251648,14.843682941544124,14.134977221713724]},"error_y":{"color":"rgba(231,138,195,1)","width":[]},"error_x":{"color":"rgba(231,138,195,1)","width":[]},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[34435.367440000002,25185.009109999999],"y":[81.234999999999999,80.203999999999994],"mode":"markers","type":"scatter","name":"Oceania","marker":{"color":"rgba(166,216,84,1)","size":[11.381218427473144,10.267320201925589],"sizemode":"area","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)","size":[11.381218427473144,10.267320201925589]},"error_y":{"color":"rgba(166,216,84,1)","width":[]},"error_x":{"color":"rgba(166,216,84,1)","width":[]},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"xaxis":{"domain":[0,0.47999999999999998],"automargin":true,"anchor":"y"},"NA2":{"anchor":[],"domain":[0,1]},"yaxis":{"domain":[0,1],"automargin":true,"anchor":"x"},"annotations":[],"shapes":[],"images":[],"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":true},"attrs":{"4c38457e60a9":{"x":{},"y":{},"mode":"markers","color":{},"size":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="faceted-violin-plot" class="level2">
+<h2 class="anchored" data-anchor-id="faceted-violin-plot">Faceted Violin Plot</h2>
+<p>Similarly, we can facet the violin plots of tips by day of the week:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  tips,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="sc">~</span>sex,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="sc">~</span>tip,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="sc">~</span>sex,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"violin"</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">subplot</span>(<span class="fu">split</span>(tips, tips<span class="sc">$</span>day))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-9f48dfc74fa5f305c7ef" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9f48dfc74fa5f305c7ef">{"x":{"data":[{"fillcolor":"rgba(102,194,165,0.5)","x":["Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female","Female"],"y":[1.01,3.6099999999999999,5,3.02,1.6699999999999999,3.5,2.75,2.23,3,3,2.4500000000000002,3.0699999999999998,2.6000000000000001,5.2000000000000002,1.5,2.4700000000000002,1,3,3.1400000000000001,5,2.2000000000000002,1.8300000000000001,5.1699999999999999,1,4.2999999999999998,3.25,2.5,3,2.5,3.48,4.0800000000000001,4,1,4,3.5,1.5,1.8,2.9199999999999999,1.6799999999999999,2.52,4.2000000000000002,2,2,2.8300000000000001,1.5,2,3.25,1.25,2,2,2.75,3.5,5,2.2999999999999998,1.5,1.3600000000000001,1.6299999999999999,5.1399999999999997,3.75,2.6099999999999999,2,3,1.6100000000000001,2,4,3.5,3.5,4.1900000000000004,5,2,2.0099999999999998,2,2.5,3.23,2.23,2.5,6.5,1.1000000000000001,3.0899999999999999,3.48,3,2.5,2,2.8799999999999999,4.6699999999999999,2,3],"type":"violin","name":"Female","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(141,160,203,0.5)","x":["Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male"],"y":[1.6599999999999999,3.5,3.3100000000000001,4.71,2,3.1200000000000001,1.96,3.23,1.71,1.5700000000000001,3,3.9199999999999999,3.71,3.3500000000000001,4.0800000000000001,7.5800000000000001,3.1800000000000002,2.3399999999999999,2,2,4.2999999999999998,1.45,2.5,3.27,3.6000000000000001,2,2.3100000000000001,5,2.2400000000000002,2.54,3.0600000000000001,1.3200000000000001,5.5999999999999996,3,5,6,2.0499999999999998,3,2.5,1.5600000000000001,4.3399999999999999,3.5099999999999998,3,1.76,6.7300000000000004,3.21,2,1.98,3.7599999999999998,2.6400000000000001,3.1499999999999999,2.0099999999999998,2.0899999999999999,1.97,1.25,3.0800000000000001,4,3,2.71,3,3.3999999999999999,5,2.0299999999999998,2,4,5.8499999999999996,3,3,3.5,4.7300000000000004,4,1.5,3,1.5,1.6399999999999999,4.0599999999999996,4.29,3.7599999999999998,3,4,2.5499999999999998,5.0700000000000003,2.3100000000000001,2.5,2,1.48,2.1800000000000002,1.5,2,6.7000000000000002,5,1.73,2,2.5,2,2.7400000000000002,2,2,5,2,3.5,2.5,2,3.48,2.2400000000000002,4.5,10,3.1600000000000001,5.1500000000000004,3.1800000000000002,4,3.1099999999999999,2,2,3.5499999999999998,3.6800000000000002,5.6500000000000004,3.5,6.5,3,5,2,4,1.5,2.5600000000000001,2.02,4,1.4399999999999999,2,2,4,4,3.4100000000000001,3,2.0299999999999998,2,5.1600000000000001,9,3,1.5,1.4399999999999999,2.2000000000000002,1.9199999999999999,1.5800000000000001,3,2.7200000000000002,2,3,3.3900000000000001,1.47,3,1.25,1,1.1699999999999999,5.9199999999999999,2,1.75],"type":"violin","name":"Male","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"xaxis":{"domain":[0,0.47999999999999998],"automargin":true,"type":"category","categoryorder":"array","categoryarray":["Female","Male"],"anchor":"y"},"NA2":{"anchor":[],"domain":[0,1]},"yaxis":{"domain":[0,1],"automargin":true,"anchor":"x"},"annotations":[],"shapes":[],"images":[],"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":true},"attrs":{"4c383c8d6160":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"violin"}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Practice
+</div>
+</div>
+<section id="practice-q-tips-facet-plot" class="level2 callout-body-container callout-body">
+<h2 class="anchored" data-anchor-id="practice-q-tips-facet-plot">Practice Q: Tips Facet Plot</h2>
+<p>Using the <em>tips</em> dataset, create a percent-stacked bar chart of the <em>time</em> column, colored by the <em>sex</em> column, and facetted by the <em>day</em> column.</p>
+<p>Which day-time has the highest proportion of male customers (e.g.&nbsp;Friday Lunch, Saturday Dinner, etc.)?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tips)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  total_bill  tip    sex smoker day   time size
+1      16.99 1.01 Female     No Sun Dinner    2
+2      10.34 1.66   Male     No Sun Dinner    3
+3      21.01 3.50   Male     No Sun Dinner    3
+4      23.68 3.31   Male     No Sun Dinner    2
+5      24.59 3.61 Female     No Sun Dinner    4
+6      25.29 4.71   Male     No Sun Dinner    4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>In this lesson, you learned how to create bivariate and multivariate graphs using Plotly Express. Understanding these visualization techniques will help you explore and communicate relationships in your data more effectively.</p>
+<p>See you in the next lesson!</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

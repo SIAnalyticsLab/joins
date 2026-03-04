@@ -1,0 +1,497 @@
+---
+title: Lesson Note | Bivariate and multivariate Graphs with Plotly Express
+author: SI Analytics
+execute:
+  echo: true
+  error: false
+  eval: true
+  message: false
+  warning: false
+format:
+  html:
+    css: global/style/si-analytics.css
+    number-sections: false
+    toc: true
+    toc-location: left
+---
+
+## Introduction
+
+In this lesson, you'll learn how to create **bivariate and multivariate graphs using Plotly in R**.  
+These types of graphs are essential for exploring relationships between two or more variables, whether they are quantitative or categorical. Understanding these relationships can provide deeper insights into your data.
+
+Let’s dive in!
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+-Create scatter plots for quantitative vs. quantitative data
+-Generate grouped histograms and violin plots for quantitative vs. categorical data
+-Create grouped, stacked, and percent-stacked bar charts for categorical vs. categorical data
+-Visualize time series data using bar charts and line charts
+-Create bubble charts to display relationships between three or more variables
+-Use faceting to compare distributions across subsets of data
+
+
+## Libraries
+This lesson requires *plotly*, *dplyr* and *janitor*. Install them if you haven’t already.
+
+```{r}
+library(plotly)
+library(dplyr)
+library(janitor)
+```
+
+
+## Numeric vs Numeric Data
+
+When both variables are quantitative, scatter plots are an excellent way to visualize their relationship.
+
+### Scatter Plot
+
+Let’s create a scatter plot to examine the relationship between total_bill and tip in the tips dataset. The tips dataset is included in Plotly Express and contains information about restaurant bills and tips that were collected by a waiter in a US restaurant.
+
+First, we’ll load the dataset and view the first five rows:
+
+```{r}
+tips <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/tips.csv")
+head(tips)
+```
+
+Next, we’ll create a basic scatter plot. 
+
+```{r}
+plot_ly(
+  tips,
+  x = ~total_bill,
+  y = ~tip,
+  type = "scatter",
+  mode = "markers"
+)
+```
+
+### Improved Scatter Plot
+
+From the scatter plot, we can observe that as the total bill increases, the tip amount tends to increase as well.
+
+Let’s enhance the scatter plot by adding labels and a title.
+
+```{r}
+plot_ly(
+  tips,
+  x = ~total_bill,
+  y = ~tip,
+  type = "scatter",
+  mode = "markers"
+) %>%
+layout(
+  title = "Relationship Between Total Bill and Tip Amount",
+  xaxis = list(title = "Total Bill ($)"),
+  yaxis = list(title = "Tip ($)")
+)
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+## Practice:
+
+Create a scatter plot showing **GDP per capita vs life expectancy**.
+
+```{r}
+# Load Datasets
+gapminder <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv")
+
+g_2007 <- gapminder %>% filter(year == 2007)
+head(g_2007)
+```
+
+
+
+```{r}
+# Your code here
+```
+:::
+
+## Solution
+
+Create a scatter plot showing **GDP per capita vs life expectancy**.
+
+```{r}
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  type = "scatter",
+  mode = "markers"
+) %>%
+layout(
+  title = "Life Expectancy vs GDP per Capita (2007)",
+  xaxis = list(title = "GDP per Capita"),
+  yaxis = list(title = "Life Expectancy")
+)
+```
+
+## Numeric vs Categorical
+
+When one variable is quantitative and the other is categorical, we can use grouped histograms, violin plots, or box plots to visualize the distribution of the quantitative variable across different categories.
+
+### Grouped Histogram
+First, here’s how you can create a regular histogram of all tips:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~tip,
+  color = ~sex,
+  type = "histogram"
+)
+```
+
+### Overlay Histogram
+By default, the histograms for each category are stacked. To change this behavior, you can use the barmode parameter. For example, barmode='overlay' will create an overlaid histogram:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~tip,
+  color = ~sex,
+  type = "histogram",
+  opacity = 0.6
+)
+```
+
+## Violin and Box Plots
+
+Violin plots are useful for comparing the distribution of a quantitative variable across different categories. They show the probability density of the data at different values and can include a box plot to summarize key statistics.
+
+First, let’s create a violin plot of all tips:
+
+```{r}
+plot_ly(
+  tips,
+  y = ~tip,
+  type = "violin",
+  box = list(visible = TRUE)
+)
+```
+
+We can add a box plot to the violin plot by setting the box parameter to True:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  y = ~tip,
+  color = ~sex,
+  type = "violin",
+  box = list(visible = TRUE)
+)
+```
+
+### Box plot
+For just the box plot, we do:
+
+```{r}
+plot_ly(
+  tips,
+  y = ~tip,
+  type = "box"
+)
+```
+
+## Summary Bar Charts (Mean and Standard Deviation)
+
+Sometimes it’s useful to display the mean and standard deviation of a quantitative variable across different categories. This can be visualized using a bar chart with error bars.
+
+First, let’s calculate the mean and standard deviation of tips for each gender. You have not yet learned how to do this, but you will in a later lesson.
+
+```{r}
+# Calculate the mean and standard deviation
+summary_df <- tips %>%
+  group_by(sex) %>%
+  summarise(
+    mean_tip = mean(tip),
+    sd_tip = sd(tip)
+  )
+# Create the bar chart
+plot_ly(
+  summary_df,
+  x = ~sex,
+  y = ~mean_tip,
+  type = "bar",
+  error_y = list(array = summary_df$sd_tip)
+)
+```
+
+This bar chart displays the average tip amount for each gender, with error bars representing the standard deviation
+
+## Categorical vs Categorical
+
+When both variables are categorical, bar charts with a color axis are effective for visualizing the frequency distribution across categories. We will focus on three types of bar charts: stacked bar charts, percent-stacked bar charts, and grouped/clustered bar charts.
+
+### Stacked Bar Chart
+
+Stacked bar charts show the total counts and the breakdown within each category. To make a stacked bar chart, use the color parameter to specify the categorical variable:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~day,
+  color = ~sex,
+  type = "histogram"
+)
+```
+
+### Percent Stacked Bar Chart
+
+To show proportions instead of counts, we can create percent-stacked bar charts by setting the barnorm parameter to 'percent':
+
+```{r}
+plot_ly(
+  tips,
+  x = ~day,
+  color = ~sex,
+  type = "histogram",
+  barnorm = "percent"
+)
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+## Practice Q: Proportion of High and Low Income Countries by Continent
+
+Again using the *g_2007_income* *dataset, create a percent-stacked bar chart showing the proportion of high and low income countries in each continent. Add text labels to the bars to show the exact percentages.
+
+According the plot, which continent has the highest proportion of high income countries? Are there any limitations to this plot?
+
+```{r}
+# Your code here
+```
+
+
+:::
+
+
+### Clustered Bar Chart
+
+For clustered bar charts, set the barmode parameter to 'group' to place the bars for each category side by side:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~day,
+  color = ~sex,
+  type = "histogram"
+) %>%
+layout(barmode = "group")
+```
+
+## Time Series
+
+Time series data represents observations collected at different points in time. It’s crucial for analyzing trends, patterns, and changes over time. Let’s explore some basic time series visualizations using Nigeria’s population data from the Gapminder dataset.
+
+First, let’s prepare our data:
+
+```{r}
+# Subset the data for Nigeria
+nigeria_pop <- gapminder %>%
+  filter(country == "Nigeria") %>%
+  select(year, pop)
+```
+
+### Bar Chart
+
+A bar chart can be used to plot time series data.
+
+```{r}
+plot_ly(
+  nigeria_pop,
+  x = ~year,
+  y = ~pop,
+  type = "bar"
+)
+```
+
+### Line Chart
+
+A line chart is excellent for showing continuous changes over time:
+
+```{r}
+plot_ly(
+  nigeria_pop,
+  x = ~year,
+  y = ~pop,
+  type = "scatter",
+  mode = "lines+markers"
+)
+```
+
+### Compare Nigeria and Ghana
+
+We can also compare the population growth of multiple countries by adding a color parameter:
+
+```{r}
+nigeria_ghana <- gapminder %>%
+  filter(country %in% c("Nigeria", "Ghana"))
+
+plot_ly(
+  nigeria_ghana,
+  x = ~year,
+  y = ~pop,
+  color = ~country,
+  type = "scatter",
+  mode = "lines+markers"
+)
+```
+
+This chart allows us to compare the population trends of Nigeria and Ghana over time.
+
+
+---
+
+::: {.callout-tip title="Practice"}
+
+## Practice Q: GDP per Capita Time Series
+
+CUsing the Gapminder dataset, create a time series visualization for the GDP per capita of Iraq.
+
+```{r}
+# Your code here
+```
+
+What happened to Iraq in the 1980s that might explain the graph shown?
+
+:::
+
+## Plots with three or more variables
+
+Although bivariate visualizations are the most common types of visualizations, plots with three or more variables are also sometimes useful. Let’s explore a few examples.
+
+### Bubble Charts
+
+Bubble charts show the relationship between three variables by mapping the size of the points to a third variable. Below, we plot the relationship between gdpPercap and lifeExp with the size of the points representing the population of the country.
+
+```{r}
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  size = ~pop,
+  color = ~continent,
+  type = "scatter",
+  mode = "markers"
+)
+```
+
+We can easily spot the largest countries by population, such as China, India, and the United States. We can also add a color axis to differentiate between continents:
+
+
+## Tips Bubble Chart
+
+```{r}
+plot_ly(
+  tips,
+  x = ~total_bill,
+  y = ~tip,
+  size = ~size,
+  color = ~day,
+  type = "scatter",
+  mode = "markers"
+) %>%
+layout(
+  title = "Tips vs Total Bill by Party Size and Day"
+)
+```
+
+Now we have four different variables being plotted:
+
+-gdpPercap on the x-axis
+-lifeExp on the y-axis
+-pop as the size of the points
+-continent as the color of the points
+
+---
+
+::: {.callout-tip title="Practice"}
+
+## Practice Q: Tips Bubble Chart
+
+Using the *tips* dataset, create a bubble chart showing the relationship between *total_bill* and *tip* with the *size* of the points representing the size of the party, and the color representing the *day* of the week.
+
+Use the plot to answer the question:
+
+-The highest two tip amounts were on which days and what was the table size?
+
+```{r}
+head(tips)
+# Your code here
+```
+
+:::
+
+
+
+## Facet Plots
+
+Faceting splits a single plot into multiple plots, with each plot showing a different subset of the data. This is useful for comparing distributions across subsets.
+
+For example, we can facet the bubble chart by continent:
+
+```{r}
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  size = ~pop,
+  color = ~continent,
+  type = "scatter",
+  mode = "markers"
+) %>%
+subplot(
+  split(g_2007, g_2007$continent)
+)
+```
+
+## Faceted Violin Plot
+Similarly, we can facet the violin plots of tips by day of the week:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  y = ~tip,
+  color = ~sex,
+  type = "violin"
+) %>%
+subplot(split(tips, tips$day))
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+## Practice Q: Tips Facet Plot
+
+Using the *tips* dataset, create a percent-stacked bar chart of the *time* column, colored by the *sex* column, and facetted by the *day* column.
+
+Which day-time has the highest proportion of male customers (e.g. Friday Lunch, Saturday Dinner, etc.)?
+
+```{r}
+head(tips)
+# Your code here
+```
+
+
+:::
+
+
+## Summary
+
+In this lesson, you learned how to create bivariate and multivariate graphs using Plotly Express. Understanding these visualization techniques will help you explore and communicate relationships in your data more effectively.
+
+See you in the next lesson!

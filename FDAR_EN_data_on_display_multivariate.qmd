@@ -75,20 +75,32 @@ tips %>%
 
 ```{r}
 plot_ly(
-  mtcars,
-  x = ~wt,
-  y = ~mpg,
+  tips,
+  x = ~total_bill,
+  y = ~tip,
+  type = "scatter"
+) 
+```
+
+Let’s enhance the scatter plot by adding labels and a title.
+
+
+```{r}
+plot_ly(
+  tips,
+  x = ~total_bill,
+  y = ~tip,
   type = "scatter",
   mode = "markers"
 ) %>%
   layout(
-    title = "Relationship Between Weight and MPG",
-    xaxis = list(title = "Weight"),
-    yaxis = list(title = "Miles Per Gallon")
+    title = "Relationship Between Total Bill and Tip",
+    xaxis = list(title = "Total Bill ($)"),
+    yaxis = list(title = "Tip ($)")
   )
 ```
 
-As weight increases, fuel efficiency decreases.
+
 
 ---
 
