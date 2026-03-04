@@ -1,0 +1,293 @@
+---
+title: "Univariate Graphs with Plotly Express"
+author: "SI Analytics"
+format:
+  html:
+    css: ../global/style/si-analytics.css
+    toc: true
+    toc-location: left
+    number-sections: false
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+  error: false
+---
+
+## Intro
+
+In this lesson, you will learn how to create univariate graphs using Plotly in **R** within the RStudio environment. 
+
+Univariate graphs help us understand the distribution of a single variable, whether categorical or quantitative.
+
+Let us get started.
+
+## Learning Objectives
+
+- Create histograms for quantitative variables using Plotly in R
+- Create bar charts for categorical variables
+- Create pie charts for categorical distributions
+- Customize titles, axis labels, and colors
+
+## Libraries
+
+```{r}
+library(plotly)
+library(dplyr)
+library(ggplot2)
+```
+
+---
+
+# Quantitative Data
+
+## Histogram
+
+Histograms visualize the distribution of continuous variables.
+
+We will use the built-in `mtcars` dataset.
+
+```{r}
+head(mtcars)
+```
+
+### Basic Histogram of MPG
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~mpg,
+  type = "histogram"
+)
+```
+
+::: {.callout-note title="Side Note"}
+Plotly graphs are interactive. Hover over the bars to see frequencies. You can zoom and export the chart directly from the toolbar.
+:::
+
+---
+
+## Customizing the Histogram
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~mpg,
+  type = "histogram",
+  marker = list(color = "#6a5acd")
+) %>%
+  layout(
+    title = "Distribution of Miles Per Gallon",
+    xaxis = list(title = "Miles Per Gallon (MPG)"),
+    yaxis = list(title = "Frequency")
+  )
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice Q: Histogram of Horsepower
+
+Create a histogram showing the distribution of horsepower (`hp`) in the `mtcars` dataset.  
+Add:
+- A title  
+- Custom x-axis label  
+- A hex color  
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+# Solution
+plot_ly(
+  mtcars,
+  x = ~hp,
+  type = "histogram",
+  marker = list(color = "#1f77b4")
+) %>%
+  layout(
+    title = "Distribution of Horsepower",
+    xaxis = list(title = "Horsepower"),
+    yaxis = list(title = "Frequency")
+  )
+```
+---
+
+# Categorical Data
+
+```{r}
+mtcars <- mtcars %>%
+  mutate(
+    cyl = factor(cyl),
+    gear = factor(gear)
+  )
+```
+
+---
+
+## Bar Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  type = "histogram"
+) %>%
+  layout(
+    title = "Distribution of Cylinders",
+    xaxis = list(title = "Number of Cylinders"),
+    yaxis = list(title = "Count")
+  )
+```
+
+---
+
+## Colored Bar Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  type = "histogram",
+  color = ~cyl,
+  colors = c("#1f77b4", "#ff7f0e", "#2ca02c")
+) %>%
+  layout(
+    title = "Distribution of Cylinders",
+    showlegend = FALSE
+  )
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice Q: Distribution of Gears
+
+Create a bar chart showing the distribution of `gear`.  
+Add:
+- Title  
+- Custom colors  
+- Remove legend  
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+# Solution
+plot_ly(
+  mtcars,
+  x = ~gear,
+  type = "histogram",
+  color = ~gear,
+  colors = c("#4B0082", "#FF1493", "#20B2AA")
+) %>%
+  layout(
+    title = "Distribution of Gears",
+    showlegend = FALSE
+  )
+```
+---
+
+## Sorting Categories
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  type = "histogram"
+) %>%
+  layout(
+    xaxis = list(categoryorder = "total descending")
+  )
+```
+
+---
+
+## Horizontal Bar Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  y = ~cyl,
+  type = "histogram"
+) %>%
+  layout(
+    title = "Horizontal Distribution of Cylinders",
+    xaxis = list(title = "Count"),
+    yaxis = list(title = "Number of Cylinders")
+  )
+```
+
+---
+
+## Pie Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  labels = ~cyl,
+  type = "pie"
+)
+```
+
+### Pie Chart with Labels
+
+```{r}
+plot_ly(
+  mtcars,
+  labels = ~cyl,
+  type = "pie"
+) %>%
+  layout(showlegend = FALSE) %>%
+  style(textposition = "inside", textinfo = "percent+label")
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice Q: Pie Chart of Gears
+
+Create a pie chart showing the distribution of `gear`.  
+Include percentages and labels inside the slices.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+# Solution
+plot_ly(
+  mtcars,
+  labels = ~gear,
+  type = "pie"
+) %>%
+  layout(showlegend = FALSE) %>%
+  style(textposition = "inside", textinfo = "percent+label")
+```
+
+---
+
+# Summary
+
+In this lesson, you learned how to:
+
+- Create histograms for quantitative variables  
+- Create bar charts for categorical variables  
+- Sort categorical variables  
+- Create horizontal bar charts  
+- Create pie charts  
+- Customize titles, labels, and colors  
+
+You should now feel confident producing interactive univariate visualizations using Plotly in R within RStudio.

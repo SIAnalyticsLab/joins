@@ -1,0 +1,269 @@
+---
+title: "9  Univariate Graphs with Plotly in R"
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float: true
+    highlight: kate
+editor_options: 
+  chunk_output_type: console
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable, gt, flextable, plotly, dplyr, )
+
+## functions
+source(here::here("global/functions/misc_functions.R"))
+
+## default render
+knitr::opts_chunk$set(class.source = "tgc-code-block", render = reactable_5_rows)
+
+```
+
+## 9.1 Intro
+
+In this lesson, you will learn how to create **univariate graphs** using **Plotly in R**.\
+Univariate graphs help us understand the distribution of a single variable, whether categorical or quantitative.
+
+All examples are designed to run inside the **RStudio environment** using Quarto.
+
+Let us get started.
+
+------------------------------------------------------------------------
+
+## 9.2 Learning Objectives
+
+By the end of this lesson, you should be able to:
+
+-   Create histograms for quantitative variables using Plotly in R
+-   Create bar charts for categorical variables
+-   Create pie charts for categorical distributions
+-   Sort categorical variables in meaningful order
+-   Customize titles, axis labels, and colors
+
+------------------------------------------------------------------------
+
+## 9.3 Setup
+
+Load libraries:
+
+```{r}
+library(plotly)
+library(dplyr)
+```
+
+------------------------------------------------------------------------
+
+## 9.4 Quantitative Data
+
+### 9.4.1 Histogram
+
+Histograms visualize the distribution of continuous variables.
+
+We will use the built-in `tips` dataset from plotly.
+
+```{r}
+data(tips, package = "plotly")
+head(tips)
+```
+
+Create a basic histogram of tip amounts:
+
+```{r}
+fig <- plot_ly(
+  tips,
+  x = ~tip,
+  type = "histogram"
+)
+
+fig
+```
+
+Hover over the bars to see frequencies. Plotly charts are interactive by default.
+
+------------------------------------------------------------------------
+
+### Customizing the Histogram
+
+```{r}
+fig <- plot_ly(
+  tips,
+  x = ~tip,
+  type = "histogram",
+  marker = list(color = "#6a5acd")
+) %>%
+  layout(
+    title = "Distribution of Tips",
+    xaxis = list(title = "Tip Amount ($)"),
+    yaxis = list(title = "Frequency")
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+### 9.4.2 Practice: Bird Strike Speed Histogram
+
+```{r}
+data(birdstrikes)
+
+fig <- plot_ly(
+  birdstrikes,
+  x = ~Speed_IAS_in_knots,
+  type = "histogram",
+  marker = list(color = "#1f77b4")
+) %>%
+  layout(
+    title = "Distribution of Aircraft Speed During Bird Strikes",
+    xaxis = list(title = "Speed (Nautical Miles Per Hour)"),
+    yaxis = list(title = "Frequency")
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+## 9.5 Categorical Data
+
+### 9.5.1 Bar Chart
+
+Bar charts display the frequency of categorical variables.
+
+```{r}
+fig <- plot_ly(
+  tips,
+  x = ~sex,
+  type = "histogram"
+) %>%
+  layout(
+    title = "Distribution of Customers by Gender",
+    xaxis = list(title = "Gender"),
+    yaxis = list(title = "Count")
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+### Adding Colors and Removing Legend
+
+```{r}
+fig <- plot_ly(
+  tips,
+  x = ~sex,
+  type = "histogram",
+  color = ~sex,
+  colors = c("#1f77b4", "#ff7f0e")
+) %>%
+  layout(
+    title = "Distribution of Customers by Gender",
+    showlegend = FALSE
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+### 9.5.2 Bird Strikes by Phase of Flight
+
+```{r}
+fig <- plot_ly(
+  birdstrikes,
+  x = ~When__Phase_of_flight,
+  type = "histogram",
+  color = ~When__Phase_of_flight
+) %>%
+  layout(
+    title = "Bird Strikes by Phase of Flight",
+    xaxis = list(title = "Phase of Flight"),
+    yaxis = list(title = "Count"),
+    showlegend = FALSE
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+## 9.5.3 Sorting Categories by Frequency
+
+```{r}
+fig <- plot_ly(
+  birdstrikes,
+  x = ~Origin_State,
+  type = "histogram"
+) %>%
+  layout(
+    title = "Bird Strikes by Origin State (Descending)",
+    xaxis = list(categoryorder = "total descending"),
+    yaxis = list(title = "Count")
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+## 9.5.4 Horizontal Bar Chart
+
+When there are many categories, horizontal bar charts improve readability.
+
+```{r}
+fig <- plot_ly(
+  birdstrikes,
+  y = ~Origin_State,
+  type = "histogram"
+) %>%
+  layout(
+    title = "Horizontal Bar Chart of Origin State",
+    yaxis = list(categoryorder = "total descending"),
+    xaxis = list(title = "Count")
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+## 9.5.5 Pie Chart
+
+Pie charts display proportions of categorical variables.
+
+```{r}
+fig <- plot_ly(
+  birdstrikes,
+  labels = ~Wildlife__Size,
+  type = "pie"
+) %>%
+  layout(
+    title = "Distribution of Bird Strikes by Wildlife Size",
+    showlegend = FALSE
+  )
+
+fig
+```
+
+------------------------------------------------------------------------
+
+## 9.6 Summary
+
+In this lesson, you learned how to create univariate graphs in R using Plotly:
+
+-   Histograms for quantitative data
+-   Bar charts for categorical data
+-   Sorted and horizontal bar charts
+-   Pie charts for proportions
+-   Custom titles, labels, and colors
+
+You should now feel confident producing interactive univariate visualizations in RStudio using Quarto.
+
+See you in the next lesson.

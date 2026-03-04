@@ -1,0 +1,199 @@
+---
+title: "Univariate Graphs with Plotly Express"
+author: "SI Analytics"
+format:
+  html:
+    css: ../global/style/si-analytics.css
+    toc: true
+    toc-location: left
+    number-sections: false
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+  error: false
+---
+
+## Introduction
+
+This advanced module extends multivariate visualization into **analytical storytelling** using Plotly in R.
+
+We move beyond exploration into:
+
+- Regression overlays
+- Trend lines
+- Comparative subplots
+- Multi-layered interpretation
+
+All examples are designed for the RStudio environment.
+
+---
+
+## Libraries
+
+```{r}
+library(plotly)
+library(dplyr)
+library(gapminder)
+```
+
+---
+
+# 1. Scatter Plot with Regression Line
+
+We examine the relationship between vehicle weight and fuel efficiency.
+
+```{r}
+model <- lm(mpg ~ wt, data = mtcars)
+
+mtcars$predicted <- predict(model)
+
+p1 <- plot_ly(
+  mtcars,
+  x = ~wt,
+  y = ~mpg,
+  type = "scatter",
+  mode = "markers",
+  name = "Observed"
+)
+
+p2 <- plot_ly(
+  mtcars,
+  x = ~wt,
+  y = ~predicted,
+  type = "scatter",
+  mode = "lines",
+  name = "Regression Line"
+)
+
+subplot(p1, p2, nrows = 1) %>%
+  layout(title = "Weight vs MPG with Regression Trend")
+```
+
+Interpretation:
+As vehicle weight increases, fuel efficiency declines in a near-linear pattern.
+
+---
+
+# 2. Time Series with Trend Overlay
+
+Nigeria population growth from Gapminder.
+
+```{r}
+nigeria <- gapminder %>%
+  filter(country == "Nigeria")
+
+trend_model <- lm(pop ~ year, data = nigeria)
+nigeria$trend <- predict(trend_model)
+
+plot_ly(nigeria, x = ~year, y = ~pop,
+        type = "scatter", mode = "lines+markers",
+        name = "Observed") %>%
+  add_lines(y = ~trend, name = "Linear Trend") %>%
+  layout(title = "Nigeria Population Growth with Trend Line")
+```
+
+This allows separation of signal (trend) from yearly variation.
+
+---
+
+# 3. Bubble Chart with Analytical Context
+
+```{r}
+g_2007 <- gapminder %>% filter(year == 2007)
+
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  size = ~pop,
+  color = ~continent,
+  type = "scatter",
+  mode = "markers"
+) %>%
+  layout(title = "GDP vs Life Expectancy (2007)")
+```
+
+Storytelling angle:
+- Wealthier nations generally live longer
+- Population size introduces geopolitical scale
+- Continental clustering reveals structural inequality
+
+---
+
+# 4. Faceted Subplots Using subplot()
+
+We compare GDP vs Life Expectancy across continents.
+
+```{r}
+continents <- unique(g_2007$continent)
+
+plots <- lapply(continents, function(cont) {
+  subset_data <- g_2007 %>% filter(continent == cont)
+  
+  plot_ly(
+    subset_data,
+    x = ~gdpPercap,
+    y = ~lifeExp,
+    size = ~pop,
+    type = "scatter",
+    mode = "markers"
+  ) %>%
+    layout(title = cont)
+})
+
+subplot(plots, nrows = 2, shareX = TRUE, shareY = TRUE) %>%
+  layout(title = "GDP vs Life Expectancy by Continent (2007)")
+```
+
+Faceting enables structured comparative analysis.
+
+---
+
+# 5. Comparative Distribution Subplots
+
+Distribution of MPG by Cylinders and Gear.
+
+```{r}
+mtcars <- mtcars %>%
+  mutate(cyl = factor(cyl), gear = factor(gear))
+
+p_cyl <- plot_ly(mtcars, x = ~mpg, color = ~cyl,
+                 type = "histogram") %>%
+  layout(title = "MPG by Cylinders")
+
+p_gear <- plot_ly(mtcars, x = ~mpg, color = ~gear,
+                  type = "histogram") %>%
+  layout(title = "MPG by Gear")
+
+subplot(p_cyl, p_gear, nrows = 1, shareY = TRUE)
+```
+
+This reveals structural efficiency differences across engine configurations.
+
+---
+
+# Advanced Storytelling Principles
+
+When adding regression lines or trend overlays:
+
+1. Do not merely show correlation; interpret it.
+2. Separate structural signal from noise.
+3. Use subplots for comparison, not clutter.
+4. Ensure axis consistency for valid comparison.
+5. Let visuals support narrative, not replace it.
+
+---
+
+# Summary
+
+In this advanced module, you learned how to:
+
+- Add regression lines to scatter plots
+- Overlay trend lines on time series
+- Use bubble charts for multivariate insight
+- Build faceted subplots using `subplot()`
+- Structure visualizations for analytical storytelling
+
+These techniques elevate visualization from descriptive to explanatory analytics.

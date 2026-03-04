@@ -1,0 +1,370 @@
+---
+title: "Univariate Graphs with Plotly Express"
+author: "SI Analytics"
+format:
+  html:
+    css: ../global/style/si-analytics.css
+    toc: true
+    toc-location: left
+    number-sections: false
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+  error: false
+---
+
+## Introduction
+
+In this lesson, we extend beyond univariate plots to explore **bivariate and multivariate visualizations** using Plotly in R within the RStudio environment.
+
+These visualizations help us understand:
+
+- Relationships between two numeric variables
+- Distributions of numeric variables across categories
+- Relationships between categorical variables
+- Trends over time
+- Patterns involving three or more variables
+
+---
+
+## Learning Objectives
+
+By the end of this lesson, you should be able to:
+
+- Create scatter plots (numeric vs numeric)
+- Create grouped histograms and box/violin plots (numeric vs categorical)
+- Create stacked and percent-stacked bar charts (categorical vs categorical)
+- Create time series plots
+- Create bubble charts
+- Use faceting to compare subsets of data
+
+---
+
+## Libraries
+
+```{r}
+library(plotly)
+library(dplyr)
+library(gapminder)
+```
+
+---
+
+# Numeric vs Numeric
+
+We will use the built-in `mtcars` dataset.
+
+```{r}
+head(mtcars)
+```
+
+## Scatter Plot
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~wt,
+  y = ~mpg,
+  type = "scatter",
+  mode = "markers"
+) %>%
+  layout(
+    title = "Relationship Between Weight and MPG",
+    xaxis = list(title = "Weight"),
+    yaxis = list(title = "Miles Per Gallon")
+  )
+```
+
+As weight increases, fuel efficiency decreases.
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice: Horsepower vs MPG
+
+Create a scatter plot showing the relationship between `hp` and `mpg`.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+plot_ly(
+  mtcars,
+  x = ~hp,
+  y = ~mpg,
+  type = "scatter",
+  mode = "markers"
+)
+```
+
+---
+
+# Numeric vs Categorical
+
+Convert some variables to factors.
+
+```{r}
+mtcars <- mtcars %>%
+  mutate(
+    cyl = factor(cyl),
+    gear = factor(gear)
+  )
+```
+
+## Grouped Histogram
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~mpg,
+  color = ~cyl,
+  type = "histogram"
+)
+```
+
+---
+
+## Violin Plot
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  y = ~mpg,
+  type = "violin",
+  box = list(visible = TRUE),
+  meanline = list(visible = TRUE)
+)
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice: MPG by Gear
+
+Create a violin or box plot comparing `mpg` across `gear`.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+plot_ly(
+  mtcars,
+  x = ~gear,
+  y = ~mpg,
+  type = "box"
+)
+```
+
+---
+
+# Summary Bar Charts (Mean + SD)
+
+```{r}
+summary_df <- mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    mean_mpg = mean(mpg),
+    sd_mpg = sd(mpg)
+  )
+
+plot_ly(
+  summary_df,
+  x = ~cyl,
+  y = ~mean_mpg,
+  type = "bar",
+  error_y = list(array = summary_df$sd_mpg)
+)
+```
+
+---
+
+# Categorical vs Categorical
+
+## Stacked Bar Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  color = ~gear,
+  type = "histogram"
+)
+```
+
+---
+
+## Percent Stacked Bar Chart
+
+```{r}
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  color = ~gear,
+  type = "histogram"
+) %>%
+  layout(barnorm = "percent")
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice: Percent Distribution of Gears by Cylinders
+
+Create a percent-stacked bar chart of `gear` by `cyl`.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+plot_ly(
+  mtcars,
+  x = ~cyl,
+  color = ~gear,
+  type = "histogram"
+) %>%
+  layout(barnorm = "percent")
+```
+
+---
+
+# Time Series
+
+Using the `gapminder` dataset.
+
+```{r}
+head(gapminder)
+```
+
+## Nigeria Population Over Time
+
+```{r}
+nigeria <- gapminder %>%
+  filter(country == "Nigeria")
+
+plot_ly(
+  nigeria,
+  x = ~year,
+  y = ~pop,
+  type = "scatter",
+  mode = "lines+markers"
+)
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice: GDP per Capita of Ghana
+
+Create a time series plot for Ghana’s `gdpPercap`.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+ghana <- gapminder %>%
+  filter(country == "Ghana")
+
+plot_ly(
+  ghana,
+  x = ~year,
+  y = ~gdpPercap,
+  type = "scatter",
+  mode = "lines+markers"
+)
+```
+
+---
+
+# Bubble Charts (Three Variables)
+
+```{r}
+g_2007 <- gapminder %>%
+  filter(year == 2007)
+
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  size = ~pop,
+  color = ~continent,
+  type = "scatter",
+  mode = "markers"
+)
+```
+
+---
+
+::: {.callout-tip title="Practice"}
+
+### Practice: Bubble Plot of Asia 2007
+
+Filter to Asia and create a bubble plot of GDP vs Life Expectancy sized by population.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+asia_2007 <- g_2007 %>% filter(continent == "Asia")
+
+plot_ly(
+  asia_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  size = ~pop,
+  type = "scatter",
+  mode = "markers"
+)
+```
+
+---
+
+# Faceting
+
+```{r}
+plot_ly(
+  g_2007,
+  x = ~gdpPercap,
+  y = ~lifeExp,
+  color = ~continent,
+  type = "scatter",
+  mode = "markers"
+) %>%
+  layout(title = "GDP vs Life Expectancy (2007)")
+```
+
+---
+
+## Summary
+
+In this lesson, you learned how to:
+
+- Create scatter plots  
+- Compare distributions across categories  
+- Create stacked and percent bar charts  
+- Visualize time series  
+- Build bubble charts  
+- Explore multivariate relationships  
+
+These techniques allow you to move from simple distributions to rich analytical storytelling using Plotly in R.
