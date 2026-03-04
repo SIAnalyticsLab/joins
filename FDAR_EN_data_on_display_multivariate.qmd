@@ -1,15 +1,15 @@
 ---
-title: "Univariate Graphs with Plotly Express"
+title: "Bivariate and Multivariate Graphs with Plotly Express"
 author: "SI Analytics"
 format:
   html:
-    css: ../global/style/si-analytics.css
+    css: global/style/si-analytics.css
     toc: true
     toc-location: left
     number-sections: false
 execute:
   echo: true
-  eval: false
+  eval: true
   warning: false
   message: false
   error: false
@@ -48,6 +48,7 @@ By the end of this lesson, you should be able to:
 library(plotly)
 library(dplyr)
 library(gapminder)
+library(reactable)
 ```
 
 ---
@@ -57,7 +58,17 @@ library(gapminder)
 We will use the built-in `mtcars` dataset.
 
 ```{r}
-head(mtcars)
+tips <- read.csv(
+  "https://raw.githubusercontent.com/plotly/datasets/master/tips.csv"
+)
+
+# Render interactive table
+tips %>%
+  head() %>%
+  reactable(
+    bordered = TRUE,
+    compact = TRUE
+    )
 ```
 
 ## Scatter Plot

@@ -1,0 +1,505 @@
+---
+author: SI Analytics
+execute:
+  echo: true
+  error: false
+  eval: true
+  message: false
+  warning: false
+format:
+  html:
+    css: global/style/si-analytics.css
+    number-sections: false
+    toc: true
+    toc-location: left
+title: Lesson Note | Univariate Graphs with Plotly Express
+---
+
+## Intro
+
+In this lesson, you'll learn how to create univariate graphs using Plotly Express. Univariate graphs are essential for understanding the distribution of a single variable, whether it's categorical or quantitative.
+
+Let's get started!
+
+## Learning objectives
+
+- Create bar charts, pie charts, and treemaps for categorical data using Plotly
+- Generate histograms for quantitative data using Plotly Express
+- Customize graph appearance and labels
+
+## Imports
+
+This lesson requires plotly.express, pandas, and vega_datasets. Install them if you haven't already.
+
+```{r}
+library(plotly)
+library(dplyr)
+library(janitor)
+```
+
+## Quantitative Data
+
+### Histogram
+
+Histograms are used to visualize the distribution of continuous variables.
+
+Let's make a histogram of the tip amounts in the tips dataset.
+
+```{r}
+tips <- read.csv(
+"https://raw.githubusercontent.com/plotly/datasets/master/tips.csv"
+)
+
+head(tips) # view the first 5 rows
+```
+
+```{r}
+plot_ly(
+  tips,
+  x = ~tip,
+  type = "histogram"
+  )
+
+```
+
+We can see that the highest bar, corresponding to tips between 1.75 and 2.24, has a frequency of 55. This means that there were 55 tips between 1.75 and 2.24.
+
+::: {.callout-note title='Side-note'}
+
+Notice that plotly charts are interactive. You can hover over the bars to see the exact number of tips in each bin.
+
+Try playing with the buttons at the top right. The button to download the chart as a png is especially useful.
+
+:::
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Speed Distribution Histogram 
+
+Following the example of the histogram of tips, create a histogram of the speed distribution (Speed_IAS_in_knots) using the birdstrikes dataset. 
+
+```{r}
+birdstrikes <- read.csv(
+"https://raw.githubusercontent.com/vega/vega-datasets/master/data/birdstrikes.csv"
+)
+birdstrikes <- janitor::clean_names(birdstrikes)
+head(birdstrikes)
+# Your code here
+```
+
+
+```{r}
+#| include: false
+# Solution
+plot_ly(
+  birdstrikes,
+  x = ~speed_ias_in_knots,
+  type = "histogram"
+)
+```
+:::
+
+Let's make the histogram a bit nicer by adding a title, customizing the x axis label, and changing the color.
+
+```{r}
+plot_ly(
+  tips,
+  x = ~tip,
+  type = "histogram",
+  marker = list(color = "lightseagreen")
+) %>%
+layout(
+  title = "Distribution of Tips",
+  xaxis = list(title = "Tip Amount ($)")
+)
+```
+
+Color names are based on standard CSS color naming from Mozilla. You can see the full list [here](https://developer.mozilla.org/en-US/docs/Web/CSS/named-color).
+
+Alternatively, you can use hex color codes, like `#1f77b4`. You can get these easily by using a color picker. Search for "color picker" on Google. 
+
+```{r}
+plot_ly(
+  tips,
+  x = ~tip,
+  type = "histogram",
+  marker = list(color = "#6a5acd")
+) %>%
+layout(
+  title = "Distribution of Tips",
+  xaxis = list(title = "Tip Amount ($)")
+)
+```
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Bird Strikes Histogram Custom
+
+Update your birdstrikes histogram to use a hex code color, add a title, and change the x-axis label to "Speed (Nautical Miles Per Hour)".
+
+```{r}
+# Your code here
+```
+
+```{r}
+#| include: false
+# Solution
+plot_ly(
+  birdstrikes,
+  x = ~speed_ias_in_knots,
+  type = "histogram",
+  marker = list(color = "#4B0082")
+) %>%
+layout(
+  title = "Distribution of Bird Strike Speeds",
+  xaxis = list(title = "Speed (Nautical Miles Per Hour)"),
+  yaxis = list(title = "Count")
+)
+```
+:::
+
+## Categorical Data
+
+### Bar chart
+
+Bar charts can be used to display the frequency of a single categorical variable. 
+
+Let's create a basic bar chart showing the distribution of sex in the tips dataset:
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  type = "histogram"
+)  
+```
+
+
+Let's add counts to the bars.
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  type = "histogram",
+  textinfo = "count"
+)
+```
+
+We can enhance the chart by adding a color axis, and customizing the labels and title.
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  color = ~sex,
+  type = "histogram",
+  colors = c("#1f77b4", "#ff7f0e"),
+  textinfo = "count"
+) %>%
+layout(
+  title = "Distribution of Customers by Gender",
+  xaxis = list(title = "Gender"),
+  yaxis = list(title = "Count")
+)
+```
+
+Arguably, in this plot, we do not need the `color` axis, since the `sex` variable is already represented by the x axis. But public audiences like colors, so it may still be worth including. 
+
+However, we should remove the legend. Let's also use custom colors.
+
+For this, we can first create a figure object, then use the `.layout.update` method from that object to update the legend.
+
+```{r}
+plot_ly(
+  tips,
+  x = ~sex,
+  color = ~sex,
+  type = "histogram",
+  colors = c("#1f77b4", "#ff7f0e"),
+  textinfo = "count"
+) %>%
+layout(
+  title = "Distribution of Customers by Gender",
+  xaxis = list(title = "Gender"),
+  yaxis = list(title = "Count",
+  showlegend = FALSE)
+)
+
+```
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Bird Strikes by Phase of Flight
+
+Create a bar chart showing the frequency of bird strikes by the phase of flight, `When__Phase_of_flight`. Add appropriate labels and a title. Use colors of your choice, and remove the legend.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+# | include: false
+# Solution
+fig = plot_ly(
+  birdstrikes,
+  x = ~phase_of_flight,
+  color = ~phase_of_flight,
+  type = "histogram"
+) %>%
+layout(
+  title = "Bird Strikes by Phase of Flight",
+  showlegend = FALSE
+)
+fig
+```
+:::
+
+#### Sorting categories
+
+It is sometimes useful to dictate a specific order for the categories in a bar chart. 
+
+Consider this bar chart of the election winners by district in the 2013 Montreal mayoral election.
+
+```{r}
+election <- read.csv(
+"https://raw.githubusercontent.com/plotly/datasets/master/election.csv"
+)
+election <- janitor::clean_names(election)
+head(election)
+```
+
+```{r}
+plot_ly(
+  election,
+  x = ~winner,
+  type = "histogram"
+)
+```
+
+Let's define a custom order for the categories. "Bergeron" will be first, then "Joly" then "Coderre".
+    
+```{r}
+
+election$winner <- factor(
+  election$winner,
+  levels = c("Bergeron", "Joly", "Coderre")
+)
+
+plot_ly(
+  election,
+  x = ~winner,
+  type = "histogram"
+)
+
+```
+
+We can also sort the categories by frequency.
+
+We can sort the categories by frequency using the `categoryorder` attribute of the x axis.
+
+```{r}
+counts <- election %>%
+  count(winner) %>%
+  arrange(desc(n))
+
+election$winner <- factor(election$winner, levels = counts$winner)
+
+plot_ly(
+  election,
+  x = ~winner,
+  type = "histogram"
+)
+
+```
+
+Or in ascending order:
+
+```{r}
+
+counts <- election %>%
+  count(winner) %>%
+  arrange(n)
+
+election$winner <- factor(election$winner, levels = counts$winner)
+
+plot_ly(
+  election,
+  x = ~winner,
+  type = "histogram"
+)
+
+``` 
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Sorted Origin State Bar Chart
+
+Create a sorted bar chart showing the distribution of bird strikes by origin state. Sort the bars in descending order of frequency.
+
+```{r}
+# Your code here
+```
+
+```{r}
+#| include: false
+# Solution
+
+state_counts <- birdstrikes %>%
+  count(origin_state) %>%
+  arrange(desc(n))
+
+birdstrikes$origin_state <- factor(
+  birdstrikes$origin_state,
+  levels = state_counts$origin_state
+)
+
+plot_ly(
+  birdstrikes,
+  x = ~origin_state,
+  type = "histogram"
+) %>%
+layout(
+  title = "Bird Strikes by Origin State"
+)
+```
+:::
+
+### Horizontal bar chart
+
+When you have many categories, horizontal bar charts are often easier to read than vertical bar charts. To make a horizontal bar chart, simply use the `y` axis instead of the `x` axis.
+
+```{r}
+plot_ly(
+  tips,
+  y = ~day,
+  type = "histogram"
+) %>%
+layout(
+  title = "Distribution of Dining Days",
+  xaxis = list(title = "Count"),
+  yaxis = list(title = "Day")
+)
+```
+
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Horizontal Bar Chart of Origin State
+    
+Create a horizontal bar chart showing the distribution of bird strikes by origin state.
+
+```{r}
+# Your code here
+```
+
+```{r}
+#| include: false
+# Solution
+
+plot_ly(
+  birdstrikes,
+  y = ~origin_state,
+  type = "histogram"
+) %>%
+layout(
+  title = "Bird Strikes by Origin State",
+  xaxis = list(title = "Count"),
+  yaxis = list(title = "Origin State")
+)
+```
+:::
+
+
+### Pie chart
+
+Pie charts are also useful for showing the proportion of categorical variables. They are best used when you have a *small* number of categories. For larger numbers of categories, pie charts are hard to read.
+
+Let's make a pie chart of the distribution of tips by day of the week.
+
+```{r}
+plot_ly(
+  tips,
+  labels = ~day,
+  type = "pie"
+) %>%
+layout(
+  title = "Distribution of Tips by Day"
+)
+```
+
+We can add labels to the pie chart to make it easier to read.
+
+```{r}
+plot_ly(
+  tips,
+  labels = ~day,
+  type = "pie",
+  textposition = "inside",
+  textinfo = "percent+label"
+) %>%
+layout(
+  title = "Distribution of Tips by Day"
+)
+
+```
+
+The legend is no longer needed, so we can remove it.
+
+```{r}
+plot_ly(
+  tips,
+  labels = ~day,
+  type = "pie",
+  textposition = "inside",
+  textinfo = "percent+label"
+) %>%
+layout(
+  title = "Distribution of Tips by Day",
+  showlegend = FALSE
+)
+```
+
+::: {.callout-note title='Pro Tip'}
+
+If you forget how to make simple changes like this, don't hesitate to consult the plotly documentation, Google or ChatGPT.
+
+:::
+
+::: {.callout-tip title='Practice'}
+
+### Practice Q: Wildlife Size Pie Chart
+
+Create a pie chart showing the distribution of bird strikes by wildlife size. Include percentages and labels inside the pie slices.
+
+```{r}
+# Your code here
+```
+:::
+
+```{r}
+#| include: false
+# Solution
+
+plot_ly(
+  birdstrikes,
+  labels = ~wildlife_size,
+  type = "pie",
+  textposition = "inside",
+  textinfo = "percent+label"
+) %>%
+layout(
+  title = "Bird Strikes by Wildlife Size",
+  showlegend = FALSE
+)
+```
+:::
+
+
+
+## Summary
+
+In this lesson, you learned how to create univariate graphs using Plotly Express. You should now feel confident in your ability to create bar charts, pie charts, and histograms. You should also feel comfortable customizing the appearance of your graphs.
+
+See you in the next lesson.

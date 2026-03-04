@@ -1,9 +1,9 @@
 ---
-title: "Univariate Graphs with Plotly Express"
+title: "Data Visualization Types"
 author: "SI Analytics"
 format:
   html:
-    css: ../global/style/si-analytics.css
+    css: global/style/si-analytics.css
     toc: true
     toc-location: left
     number-sections: false
