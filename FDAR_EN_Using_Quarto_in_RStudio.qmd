@@ -3,7 +3,7 @@ title: "Using Quarto"
 author: "SI Analytics"
 format:
   html:
-    css: ../global/style/si-analytics.css
+    css: global/style/si-analytics.css
     toc: true
     toc-location: left
     number-sections: false
