@@ -52,12 +52,12 @@ pacman::p_load(tidyverse,
 
 # Dataset: HIV Mortality
 
-We will use a dataset containing information about HIV mortality in Colombia from 2010 to 2016, which is hosted on the open data platform 'Datos Abiertos Colombia.' You can learn more and access the full dataset [here](https://www.datos.gov.co/en/Salud-y-Protecci-n-Social/Mortalidad-VIH-2010-A-2016/yht4-twf4).
+We will use a dataset containing information about HIV mortality in Colombia from 2010 to 2016, which is hosted on the open data platform 'Datos Abiertos Colombia.' You can learn more and access the full dataset [here](https://github.com/SIAnalyticsLab/bootcamps/blob/main/colombia_hiv_deaths_2010_to_2016.csv).
 
 Each row corresponds to an individual who passed away from AIDS or AIDS-related-complications.
 
 ```{r message = F}
-hiv_mort <- read_csv(here("data/colombia_hiv_deaths_2010_to_2016.csv"))
+hiv_mort <- read_csv("https://raw.githubusercontent.com/SIAnalyticsLab/bootcamps/refs/heads/main/colombia_hiv_deaths_2010_to_2016.csv")
 ```
 
 ```{r render = reactable_5_rows, echo = F}
