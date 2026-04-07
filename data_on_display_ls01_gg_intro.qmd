@@ -104,6 +104,7 @@ load(here::here("data/clean/nigerm_cases_rgn.RData"))
 Take a moment to browse through the data:
 
 ```{r}
+#| eval: true
 ## Print Niger measles (nigerm) data frame
 reactable::reactable(head(nigerm, 10))
 ```
@@ -129,6 +130,7 @@ These studies are much more complex than what we will do there, but let's see if
 We can get some information about patterns in this data by inspecting summary statistics given by the **`summary()`** function:
 
 ```{r}
+#| eval: true
 summary(nigerm)
 ```
 
@@ -183,6 +185,7 @@ For easier plotting in this lesson, we will use a smaller subsets of the `nigerm
 First let's create one called `nigerm96`, which only contains measles case data for the year 1996. Running the code below will create `nigerm96` and add it to your RStudio Environment:
 
 ```{r}
+#| eval: true
 ## Create nigerm96 data frame
 nigerm96 <- nigerm %>%   
   filter(year == 1996)  %>% # filter to only include rows from 1996
@@ -195,6 +198,7 @@ The `select()` and `filter()` functions are part of the {dplyr} package for data
 
 Let's look at our new dataframe, `nigerm96`:
 ```{r}
+#| eval: true
 ## Print nigerm96
 reactable::reactable(head(nigerm96, 20))
 

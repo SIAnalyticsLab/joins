@@ -1,5 +1,5 @@
 ---
-title: Lesson Note | Bivariate and multivariate Graphs with Plotly Express
+title: Lesson Note | Bivariate and multivariate Graphs with Plotly
 author: SI Analytics
 execute:
   echo: true
